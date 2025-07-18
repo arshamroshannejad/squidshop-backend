@@ -1,0 +1,16 @@
+app:
+  port: 8000
+  debug: false
+  base_api: /api/v1
+  secret:
+  access_hour_ttl: 24h
+
+postgres:
+  host:
+  port: 5432
+  username:
+  password:
+  database: postgres
+  max_open_conns: 25
+  max_idle_conns: 25
+  conn_max_idle_time: 15m
