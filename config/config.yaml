@@ -6,7 +6,7 @@ app:
   access_hour_ttl: 24h
 
 postgres:
-  host:
+  host: postgres
   port: 5432
   username:
   password:
@@ -14,3 +14,8 @@ postgres:
   max_open_conns: 25
   max_idle_conns: 25
   conn_max_idle_time: 15m
+
+redis:
+  host: redis
+  port: 6379
+  password:

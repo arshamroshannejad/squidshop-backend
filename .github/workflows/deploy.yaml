@@ -1,0 +1,71 @@
+name: build and deploy to server
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create-Env-File
+        run: |
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USERNAME }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
+
+      - name: Display-Env-File
+        run: cat ./.env
+
+      - name: Create config.yaml file
+        run: |
+          cat > config/config.yaml << EOF
+          app:
+            port: 8000
+            debug: false
+            base_api: /api/v1
+            secret: ${{ secrets.APP_SECRET }}
+            access_hour_ttl: 24h
+          
+          postgres:
+            host: postgres
+            port: 5432
+            username: ${{ secrets.POSTGRES_USERNAME }}
+            password: ${{ secrets.POSTGRES_PASSWORD }}
+            database: postgres
+            max_open_conns: 25
+            max_idle_conns: 25
+            conn_max_idle_time: 15m
+          
+          redis:
+            host: redis
+            port: 6379
+            password: ${{ secrets.REDIS_PASSWORD }}
+          EOF
+
+      - name: Display config.yaml file
+        run: cat config/config.yaml
+
+      - name: Copy-Server-To-VM
+        uses: appleboy/scp-action@master
+        with:
+          host: '${{ secrets.VM_HOST }}'
+          username: root
+          password: '${{ secrets.VM_PASSWORD }}'
+          port: 22
+          source: .
+          target: /root/squidshop-backend
+
+      - name: Deploy-Server-In-VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: '${{ secrets.VM_HOST }}'
+          username: root
+          password: '${{ secrets.VM_PASSWORD }}'
+          port: 22
+          script: |
+            cd /root/squidshop-backend
+            make up

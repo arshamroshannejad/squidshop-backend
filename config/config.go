@@ -30,9 +30,16 @@ type postgres struct {
 	ConnMaxIdleTime time.Duration `mapstructure:"conn_max_idle_time"`
 }
 
+type redis struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+}
+
 type Config struct {
 	App      *app      `mapstructure:"app"`
 	Postgres *postgres `mapstructure:"postgres"`
+	Redis    *redis    `mapstructure:"redis"`
 }
 
 func New() (*Config, error) {
