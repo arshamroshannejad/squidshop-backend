@@ -1,4 +1,4 @@
-name: build and push app
+name: build and deploy app
 
 on:
   push:
@@ -15,6 +15,7 @@ jobs:
         run: |
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USERNAME }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
           echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
 
       - name: Display-Env-File
