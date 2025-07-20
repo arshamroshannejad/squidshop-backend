@@ -1,8 +1,10 @@
 up:
+	make down
 	docker compose up --build -d
 
 down:
 	docker compose down
+	docker system prune -af
 
 log-backend:
 	docker compose logs -f backend
