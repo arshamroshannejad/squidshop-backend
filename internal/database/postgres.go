@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/arshamroshannejad/squidshop-backend/config"
 	_ "github.com/lib/pq"
-	"github/arshamroshannejad/squidshop-backend/config"
 	"time"
 )
 
