@@ -7,9 +7,8 @@ import (
 	"github.com/arshamroshannejad/nuke"
 	"github.com/arshamroshannejad/squidshop-backend/config"
 	"github.com/arshamroshannejad/squidshop-backend/internal/database"
-	"github.com/arshamroshannejad/squidshop-backend/internal/logger"
 	"github.com/arshamroshannejad/squidshop-backend/internal/router"
-	"go.uber.org/zap"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -36,30 +35,27 @@ func main() {
 	if err != nil {
 		panic("failed to load config variables: " + err.Error())
 	}
-	zapLog, err := logger.New(cfg.App.Debug)
-	if err != nil {
-		panic("failed to create zap logger instance: " + err.Error())
-	}
-	defer zapLog.Sync()
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	db, err := database.OpenDB(cfg)
 	if err != nil {
-		zapLog.Fatal("failed to connect postgres", zap.Error(err))
+		logger.Error("failed to connect postgres", "error:", err)
+		return
 	}
 	defer db.Close()
-	zapLog.Info(
+	logger.Info(
 		"connected to postgres",
-		zap.String("host", cfg.Postgres.Host),
-		zap.Int("port", cfg.Postgres.Port),
+		"host", cfg.Postgres.Host,
+		"port", cfg.Postgres.Port,
 	)
 	redisDB, err := database.OpenRedis(cfg)
 	if err != nil {
-		zapLog.Fatal("failed to connect redis", zap.Error(err))
+		logger.Error("failed to connect redis", "error:", err)
 	}
 	defer redisDB.Close()
-	zapLog.Info(
+	logger.Info(
 		"connected to redis",
-		zap.String("host", cfg.Redis.Host),
-		zap.Int("port", cfg.Redis.Port),
+		"host", cfg.Redis.Host,
+		"port", cfg.Redis.Port,
 	)
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.App.Port),
@@ -71,18 +67,18 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	nuke.Background(func() {
-		zapLog.Info("starting server", zap.Int("port", cfg.App.Port))
+		logger.Info("server is starting...", "port", cfg.App.Port)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			zapLog.Fatal("failed to start server", zap.Error(err))
+			logger.Error("failed to start server", "error", err)
 		}
 	})
 	<-quit
-	zapLog.Info("server is shutting down...")
+	logger.Info("server is shutting down...")
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		zapLog.Error("server shutdown failed", zap.Error(err))
+		logger.Error("failed to shutdown server", "error", err)
 	} else {
-		zapLog.Info("server shutdown completed")
+		logger.Info("server is shutdown successfully")
 	}
 }
