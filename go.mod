@@ -9,7 +9,6 @@ require (
 	github.com/spf13/viper v1.20.1
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.5
-	go.uber.org/zap v1.27.0
 )
 
 require (
