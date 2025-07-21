@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/arshamroshannejad/nuke"
-	"github/arshamroshannejad/squidshop-backend/config"
-	"github/arshamroshannejad/squidshop-backend/internal/database"
-	"github/arshamroshannejad/squidshop-backend/internal/logger"
-	"github/arshamroshannejad/squidshop-backend/internal/router"
+	"github.com/arshamroshannejad/squidshop-backend/config"
+	"github.com/arshamroshannejad/squidshop-backend/internal/database"
+	"github.com/arshamroshannejad/squidshop-backend/internal/logger"
+	"github.com/arshamroshannejad/squidshop-backend/internal/router"
 	"go.uber.org/zap"
 	"net/http"
 	"os"
@@ -17,20 +17,20 @@ import (
 	"time"
 )
 
-//	@title						squidshop-backend
-//	@version					0.1.0
-//	@host						api.squidshop.ir
-//	@description				Api for managing product and everything related to E-commerce shop
-//	@termsOfService				http://swagger.io/terms/
-//	@contact.name				Arsham Roshannejad
-//	@contact.url				arshamroshannejad.ir
-//	@contact.email				arshamdev2001@gmail.com
-//	@license.name				MIT
-//	@license.url				https://www.mit.edu/~amini/LICENSE.md
-//	@BasePath					/api/v1
-//	@securityDefinitions.apikey	BearerAuth
-//	@in							header
-//	@name						Authorization
+// @title						squidshop-backend
+// @version					0.1.0
+// @host						api.squidshop.ir
+// @description				Api for managing product and everything related to E-commerce shop
+// @termsOfService				http://swagger.io/terms/
+// @contact.name				Arsham Roshannejad
+// @contact.url				arshamroshannejad.ir
+// @contact.email				arshamdev2001@gmail.com
+// @license.name				MIT
+// @license.url				https://www.mit.edu/~amini/LICENSE.md
+// @BasePath					/api/v1
+// @securityDefinitions.apikey	BearerAuth
+// @in							header
+// @name						Authorization
 func main() {
 	cfg, err := config.New()
 	if err != nil {

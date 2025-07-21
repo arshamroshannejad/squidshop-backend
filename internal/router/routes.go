@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/arshamroshannejad/nuke"
+	_ "github.com/arshamroshannejad/squidshop-backend/api"
 	swagger "github.com/swaggo/http-swagger"
-	_ "github/arshamroshannejad/squidshop-backend/api"
 	"net/http"
 	"time"
 )
@@ -13,7 +13,7 @@ func SetupRoutes() http.Handler {
 	r.Use(nuke.RecoverMiddleware)
 	r.Use(nuke.TimeoutMiddleware(time.Second * 10))
 	r.Use(nuke.HeartbeatMiddleware("/ping"))
-	r.Handle("/docs/*", swagger.Handler(
+	r.Handle("/docs/", swagger.Handler(
 		swagger.URL("doc.json"),
 		swagger.DeepLinking(true),
 		swagger.DocExpansion("none"),

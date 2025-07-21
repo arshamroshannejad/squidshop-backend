@@ -3,8 +3,8 @@ package database
 import (
 	"context"
 	"fmt"
+	"github.com/arshamroshannejad/squidshop-backend/config"
 	"github.com/redis/go-redis/v9"
-	"github/arshamroshannejad/squidshop-backend/config"
 )
 
 func OpenRedis(cfg *config.Config) (*redis.Client, error) {
