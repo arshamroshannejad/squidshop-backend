@@ -1,0 +1,7 @@
+package domain
+
+type Service interface {
+	User() UserService
+	OTP() OTPService
+	Sms() SmsService
+}

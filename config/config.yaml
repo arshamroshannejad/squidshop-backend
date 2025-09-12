@@ -1,21 +1,24 @@
 app:
   port: 8000
-  debug: false
+  debug: true
   base_api: /api/v1
-  secret:
-  access_hour_ttl: 24h
+  secret: awdawdawdawd
+  access_hour_ttl: 168h
+  sms_service:
+  sms_sender:
+  sms_api_key:
 
 postgres:
-  host: postgres
+  host: 0.0.0.0
   port: 5432
-  username:
-  password:
-  database: postgres
+  username: postgres_user
+  password: postgres_password
+  database:
   max_open_conns: 25
   max_idle_conns: 25
   conn_max_idle_time: 15m
 
 redis:
-  host: redis
+  host: 0.0.0.0
   port: 6379
-  password:
+  password: redis_password

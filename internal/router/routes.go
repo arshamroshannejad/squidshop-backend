@@ -1,26 +1,34 @@
 package router
 
 import (
-	"github.com/arshamroshannejad/nuke"
-	_ "github.com/arshamroshannejad/squidshop-backend/api"
-	swagger "github.com/swaggo/http-swagger"
+	"database/sql"
+	"log/slog"
 	"net/http"
-	"time"
+
+	_ "github.com/arshamroshannejad/squidshop-backend/api"
+	"github.com/arshamroshannejad/squidshop-backend/config"
+	"github.com/arshamroshannejad/squidshop-backend/internal/handler"
+	"github.com/arshamroshannejad/squidshop-backend/internal/middleware"
+	"github.com/arshamroshannejad/squidshop-backend/internal/repository"
+	"github.com/arshamroshannejad/squidshop-backend/internal/service"
+	"github.com/redis/go-redis/v9"
+	swagger "github.com/swaggo/http-swagger"
 )
 
-func SetupRoutes() http.Handler {
-	r := nuke.NewRouter()
-	r.Use(nuke.RecoverMiddleware)
-	r.Use(nuke.TimeoutMiddleware(time.Second * 10))
-	r.Use(nuke.HeartbeatMiddleware("/ping"))
-	r.Handle("/docs/", swagger.Handler(
+func SetupRoutes(db *sql.DB, redisDB *redis.Client, logger *slog.Logger, cfg *config.Config) http.Handler {
+	mux := http.NewServeMux()
+	repositories := repository.NewRepository(db)
+	services := service.NewService(repositories, redisDB, logger, cfg)
+	handlers := handler.NewHandler(services)
+	mux.Handle("/api/v1/auth",
+		middleware.RateLimiter(0.008333, 1)(http.HandlerFunc(handlers.User().AuthUserHandler)),
+	)
+	mux.HandleFunc("POST /api/v1/auth/verify", handlers.User().VerifyAuthUserHandler)
+	mux.Handle("/docs/", swagger.Handler(
 		swagger.URL("doc.json"),
 		swagger.DeepLinking(true),
 		swagger.DocExpansion("none"),
 		swagger.DomID("swagger-ui"),
 	))
-	r.HandleFunc("GET /root", func(w http.ResponseWriter, r *http.Request) {
-		nuke.WriteJSON(w, http.StatusOK, nuke.M{"message": "Hello World"})
-	})
-	return nuke.CorsMiddleware(nil)(r)
+	return middleware.Logger(middleware.Timeout(mux))
 }

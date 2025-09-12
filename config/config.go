@@ -1,10 +1,11 @@
 package config
 
 import (
-	"bytes"
 	_ "embed"
 	"errors"
-	"github.com/spf13/viper"
+
+	"gopkg.in/yaml.v3"
+
 	"time"
 )
 
@@ -12,48 +13,49 @@ import (
 var configurations []byte
 
 type app struct {
-	Port          int           `mapstructure:"port"`
-	Debug         bool          `mapstructure:"debug"`
-	BaseAPI       string        `mapstructure:"base_api"`
-	Secret        string        `mapstructure:"secret"`
-	AccessHourTTL time.Duration `mapstructure:"access_hour_ttl"`
+	Port          int           `yaml:"port"`
+	Debug         bool          `yaml:"debug"`
+	BaseAPI       string        `yaml:"base_api"`
+	Secret        string        `yaml:"secret"`
+	AccessHourTTL time.Duration `yaml:"access_hour_ttl"`
+	SmsService    string        `yaml:"sms_service"`
+	SmsSender     string        `yaml:"sms_sender"`
+	SmsApiKey     string        `yaml:"sms_api_key"`
 }
 
 type postgres struct {
-	Host            string        `mapstructure:"host"`
-	Port            int           `mapstructure:"port"`
-	Username        string        `mapstructure:"username"`
-	Password        string        `mapstructure:"password"`
-	Database        string        `mapstructure:"database"`
-	MaxOpenConns    int           `mapstructure:"max_open_conns"`
-	MaxIdleConns    int           `mapstructure:"max_idle_conns"`
-	ConnMaxIdleTime time.Duration `mapstructure:"conn_max_idle_time"`
+	Host            string        `yaml:"host"`
+	Port            int           `yaml:"port"`
+	Username        string        `yaml:"username"`
+	Password        string        `yaml:"password"`
+	Database        string        `yaml:"database"`
+	MaxOpenConns    int           `yaml:"max_open_conns"`
+	MaxIdleConns    int           `yaml:"max_idle_conns"`
+	ConnMaxIdleTime time.Duration `yaml:"conn_max_idle_time"`
 }
 
 type redis struct {
-	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
-	Password string `mapstructure:"password"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Password string `yaml:"password"`
 }
 
 type Config struct {
-	App      *app      `mapstructure:"app"`
-	Postgres *postgres `mapstructure:"postgres"`
-	Redis    *redis    `mapstructure:"redis"`
+	App      *app      `yaml:"app"`
+	Postgres *postgres `yaml:"postgres"`
+	Redis    *redis    `yaml:"redis"`
 }
 
 func New() (*Config, error) {
-	viper.SetConfigType("yaml")
-	if err := viper.ReadConfig(bytes.NewBuffer(configurations)); err != nil {
-		return nil, err
-	}
-	viper.AutomaticEnv()
 	var cfg Config
-	if err := viper.Unmarshal(&cfg); err != nil {
+	if err := yaml.Unmarshal(configurations, &cfg); err != nil {
 		return nil, err
 	}
 	if cfg.Postgres == nil {
 		return nil, errors.New("postgres configuration is required")
+	}
+	if cfg.Redis == nil {
+		return nil, errors.New("redis configuration is required")
 	}
 	if cfg.App == nil {
 		return nil, errors.New("app configuration is required")

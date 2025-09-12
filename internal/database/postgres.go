@@ -4,9 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
+
 	"github.com/arshamroshannejad/squidshop-backend/config"
 	_ "github.com/lib/pq"
-	"time"
 )
 
 func OpenDB(cfg *config.Config) (*sql.DB, error) {

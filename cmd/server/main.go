@@ -4,32 +4,32 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/arshamroshannejad/nuke"
-	"github.com/arshamroshannejad/squidshop-backend/config"
-	"github.com/arshamroshannejad/squidshop-backend/internal/database"
-	"github.com/arshamroshannejad/squidshop-backend/internal/router"
 	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/arshamroshannejad/squidshop-backend/config"
+	"github.com/arshamroshannejad/squidshop-backend/internal/database"
+	"github.com/arshamroshannejad/squidshop-backend/internal/router"
 )
 
-// @title						squidshop-backend
-// @version					0.1.0
-// @host						api.squidshop.ir
-// @description				Api for managing product and everything related to E-commerce shop
-// @termsOfService				http://swagger.io/terms/
-// @contact.name				Arsham Roshannejad
-// @contact.url				arshamroshannejad.ir
-// @contact.email				arshamdev2001@gmail.com
-// @license.name				MIT
-// @license.url				https://www.mit.edu/~amini/LICENSE.md
-// @BasePath					/api/v1
-// @securityDefinitions.apikey	BearerAuth
-// @in							header
-// @name						Authorization
+//	@title						squidshop-backend
+//	@version					0.1.0
+//	@host						api.squidshop.ir
+//	@description				Api for managing product and everything related to E-commerce shop
+//	@termsOfService				http://swagger.io/terms/
+//	@contact.name				Arsham Roshannejad
+//	@contact.url				arshamroshannejad.ir
+//	@contact.email				arshamdev2001@gmail.com
+//	@license.name				MIT
+//	@license.url				https://www.mit.edu/~amini/LICENSE.md
+//	@BasePath					/api/v1
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
 func main() {
 	cfg, err := config.New()
 	if err != nil {
@@ -59,19 +59,24 @@ func main() {
 	)
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.App.Port),
-		Handler:      router.SetupRoutes(),
+		Handler:      router.SetupRoutes(db, redisDB, logger, cfg),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	nuke.Background(func() {
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				logger.Error("panic occurred in running server", "error", r)
+			}
+		}()
 		logger.Info("server is starting...", "port", cfg.App.Port)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("failed to start server", "error", err)
 		}
-	})
+	}()
 	<-quit
 	logger.Info("server is shutting down...")
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

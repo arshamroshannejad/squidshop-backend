@@ -1,0 +1,118 @@
+package handler
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/arshamroshannejad/squidshop-backend/internal/domain"
+	"github.com/arshamroshannejad/squidshop-backend/internal/entity"
+	"github.com/go-playground/validator/v10"
+)
+
+type userHandlerImpl struct {
+	service   domain.Service
+	validator *validator.Validate
+}
+
+func NewUserHandler(service domain.Service, validator *validator.Validate) domain.UserHandler {
+	return &userHandlerImpl{
+		service:   service,
+		validator: validator,
+	}
+}
+
+// AuthUserHandler godoc
+//
+//	@Summary		auth handler (register | login)
+//	@Description	if user exists it will log in else register. it also sends otp code to user phone
+//	@Accept			json
+//	@Produce		json
+//	@Tags			auth
+//	@Param			request	body	entity.UserAuthRequest	true	"phone for register or login"
+//	@Success		200
+//	@Failure		400
+//	@Failure		500
+//	@Router			/auth [post]
+func (u *userHandlerImpl) AuthUserHandler(w http.ResponseWriter, r *http.Request) {
+	var reqBody entity.UserAuthRequest
+	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		return
+	}
+	if err := u.validator.Struct(reqBody); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		return
+	}
+	if err := u.service.User().CreateUser(r.Context(), &reqBody); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	otpCode, err := u.service.OTP().Generate(r.Context(), reqBody.Phone)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	smsMsg := fmt.Sprintf("کد احراز هویت شما : %s\nفروشگاه اینترنتی اسکویید شاپ", otpCode)
+	if err := u.service.Sms().Send(smsMsg, reqBody.Phone); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+// VerifyAuthUserHandler godoc
+//
+//	@Summary		verify auth handler
+//	@Description	verify otp code and return access token
+//	@Accept			json
+//	@Produce		json
+//	@Tags			auth
+//	@Param			request	body	entity.UserVerifyAuthRequest	true	"phone and code for register or login"
+//	@Success		200
+//	@Failure		400
+//	@Failure		500
+//	@Router			/auth/verify [post]
+func (u *userHandlerImpl) VerifyAuthUserHandler(w http.ResponseWriter, r *http.Request) {
+	var reqBody entity.UserVerifyAuthRequest
+	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		return
+	}
+	if err := u.validator.Struct(reqBody); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		return
+	}
+	isValid, err := u.service.OTP().Verify(r.Context(), reqBody.Phone, reqBody.Code)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if !isValid {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte(fmt.Sprintf(`{"error": "invalid otp code or expired"}`)))
+		return
+	}
+	user, err := u.service.User().GetUserByPhone(r.Context(), reqBody.Phone)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	token, err := u.service.User().GenerateUserJwtToken(r.Context(), reqBody.Phone, user.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf(`{"access_token": "%s"}`, token)))
+}

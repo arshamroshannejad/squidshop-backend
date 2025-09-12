@@ -17,7 +17,115 @@
     },
     "host": "api.squidshop.ir",
     "basePath": "/api/v1",
-    "paths": {},
+    "paths": {
+        "/auth": {
+            "post": {
+                "description": "if user exists it will log in else register. it also sends otp code to user phone",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "auth handler (register | login)",
+                "parameters": [
+                    {
+                        "description": "phone for register or login",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.UserAuthRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/verify": {
+            "post": {
+                "description": "verify otp code and return access token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "verify auth handler",
+                "parameters": [
+                    {
+                        "description": "phone and code for register or login",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.UserVerifyAuthRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.UserAuthRequest": {
+            "type": "object",
+            "required": [
+                "phone"
+            ],
+            "properties": {
+                "phone": {
+                    "type": "string",
+                    "maxLength": 13,
+                    "minLength": 1,
+                    "example": "+989029266635"
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.UserVerifyAuthRequest": {
+            "type": "object",
+            "required": [
+                "code",
+                "phone"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+989029266635"
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "BearerAuth": {
             "type": "apiKey",
