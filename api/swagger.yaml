@@ -22,6 +22,21 @@ definitions:
     - code
     - phone
     type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_model.User:
+    properties:
+      created_at:
+        example: "2025-09-12T00:12:12.123456789Z"
+        type: string
+      id:
+        example: "1"
+        type: string
+      is_admin:
+        example: false
+        type: boolean
+      phone:
+        example: "+989029266635"
+        type: string
+    type: object
 host: api.squidshop.ir
 info:
   contact:
@@ -60,7 +75,7 @@ paths:
           description: Internal Server Error
       summary: auth handler (register | login)
       tags:
-      - auth
+      - Auth
   /auth/verify:
     post:
       consumes:
@@ -84,7 +99,26 @@ paths:
           description: Internal Server Error
       summary: verify auth handler
       tags:
-      - auth
+      - Auth
+  /user/profile:
+    get:
+      consumes:
+      - application/json
+      description: get user profile and info based on jwt token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile data
+          schema:
+            $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.User'
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: user profile endpoint
+      tags:
+      - User
 securityDefinitions:
   BearerAuth:
     in: header

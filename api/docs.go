@@ -34,7 +34,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "auth handler (register | login)",
                 "parameters": [
@@ -71,7 +71,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "verify auth handler",
                 "parameters": [
@@ -91,6 +91,37 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/profile": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "get user profile and info based on jwt token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "user profile endpoint",
+                "responses": {
+                    "200": {
+                        "description": "User profile data",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.User"
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -124,6 +155,27 @@ const docTemplate = `{
                 "code": {
                     "type": "string",
                     "example": "123456"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+989029266635"
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_model.User": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-09-12T00:12:12.123456789Z"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "is_admin": {
+                    "type": "boolean",
+                    "example": false
                 },
                 "phone": {
                     "type": "string",

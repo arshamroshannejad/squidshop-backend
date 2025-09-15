@@ -19,8 +19,18 @@ func NewUserRepository(db *sql.DB) domain.UserRepository {
 	}
 }
 
+func (r *userRepositoryImpl) GetByID(ctx context.Context, userID string) (*model.User, error) {
+	const getUserByIDQuery string = "SELECT * FROM users WHERE id = $1"
+	args := []any{userID}
+	row := r.db.QueryRowContext(ctx, getUserByIDQuery, args...)
+	if err := row.Err(); err != nil {
+		return nil, err
+	}
+	return collectUserRow(row)
+}
+
 func (r *userRepositoryImpl) GetByPhone(ctx context.Context, phone string) (*model.User, error) {
-	const getUserByPhoneQuery string = "SELECT id, phone, created_at FROM users WHERE phone = $1"
+	const getUserByPhoneQuery string = "SELECT * FROM users WHERE phone = $1"
 	args := []any{phone}
 	row := r.db.QueryRowContext(ctx, getUserByPhoneQuery, args...)
 	if err := row.Err(); err != nil {
@@ -42,6 +52,7 @@ func collectUserRow(row *sql.Row) (*model.User, error) {
 		&user.ID,
 		&user.Phone,
 		&user.CreatedAt,
+		&user.IsAdmin,
 	)
 	if err != nil {
 		return nil, err

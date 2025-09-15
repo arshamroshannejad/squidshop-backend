@@ -1,0 +1,5 @@
+DELETE FROM users
+    WHERE phone = '+989029266635';
+
+ALTER TABLE users
+    DROP COLUMN IF EXISTS is_admin;

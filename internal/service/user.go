@@ -29,6 +29,17 @@ func NewUserService(userRepository domain.UserRepository, redisDB *redis.Client,
 	}
 }
 
+func (s *userServiceImpl) GetUserByID(ctx context.Context, userID string) (*model.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+	user, err := s.userRepository.GetByID(ctx, userID)
+	if err != nil {
+		s.logger.Error("failed to get user with id", "error", err)
+		return nil, err
+	}
+	return user, nil
+}
+
 func (s *userServiceImpl) GetUserByPhone(ctx context.Context, phone string) (*model.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -50,12 +61,13 @@ func (s *userServiceImpl) CreateUser(ctx context.Context, user *entity.UserAuthR
 	return nil
 }
 
-func (s *userServiceImpl) GenerateUserJwtToken(ctx context.Context, userID, phone string) (string, error) {
+func (s *userServiceImpl) GenerateUserJwtToken(ctx context.Context, user *model.User) (string, error) {
 	exp := time.Now().Add(s.cfg.App.AccessHourTTL).Unix()
 	claims := jwt.MapClaims{
-		"user_id": userID,
-		"phone":   phone,
-		"exp":     exp,
+		"user_id":  user.ID,
+		"phone":    user.Phone,
+		"is_admin": user.IsAdmin,
+		"exp":      exp,
 	}
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(s.cfg.App.Secret))
 	if err != nil {
