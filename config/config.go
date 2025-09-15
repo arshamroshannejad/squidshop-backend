@@ -12,7 +12,7 @@ import (
 //go:embed config.yaml
 var configurations []byte
 
-type app struct {
+type App struct {
 	Port          int           `yaml:"port"`
 	Debug         bool          `yaml:"debug"`
 	BaseAPI       string        `yaml:"base_api"`
@@ -23,7 +23,7 @@ type app struct {
 	SmsApiKey     string        `yaml:"sms_api_key"`
 }
 
-type postgres struct {
+type Postgres struct {
 	Host            string        `yaml:"host"`
 	Port            int           `yaml:"port"`
 	Username        string        `yaml:"username"`
@@ -34,16 +34,16 @@ type postgres struct {
 	ConnMaxIdleTime time.Duration `yaml:"conn_max_idle_time"`
 }
 
-type redis struct {
+type Redis struct {
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 	Password string `yaml:"password"`
 }
 
 type Config struct {
-	App      *app      `yaml:"app"`
-	Postgres *postgres `yaml:"postgres"`
-	Redis    *redis    `yaml:"redis"`
+	App      *App      `yaml:"app"`
+	Postgres *Postgres `yaml:"postgres"`
+	Redis    *Redis    `yaml:"redis"`
 }
 
 func New() (*Config, error) {
