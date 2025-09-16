@@ -33,6 +33,42 @@ func SetupRoutes(db *sql.DB, redisDB *redis.Client, logger *slog.Logger, cfg *co
 		"GET /api/v1/user/profile",
 		middleware.RequireAuth(cfg)(http.HandlerFunc(handlers.User().UserProfileHandler)),
 	)
+	mux.HandleFunc(
+		"GET /api/v1/category",
+		handlers.Category().GetAllCategoriesHandler,
+	)
+	mux.Handle(
+		"POST /api/v1/category",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Category().CreateCategoryHandler),
+			),
+		),
+	)
+	mux.Handle(
+		"PUT /api/v1/category/{id}",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Category().UpdateCategoryHandler),
+			),
+		),
+	)
+	mux.Handle(
+		"DELETE /api/v1/category/{id}",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Category().DeleteCategoryHandler),
+			),
+		),
+	)
+	mux.Handle(
+		"GET /api/v1/category/exists",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Category().ExistsCategoryHandler),
+			),
+		),
+	)
 	mux.Handle("/docs/", swagger.Handler(
 		swagger.URL("doc.json"),
 		swagger.DeepLinking(true),

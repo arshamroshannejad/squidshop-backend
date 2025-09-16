@@ -30,7 +30,7 @@ func NewUserHandler(service domain.Service, validator *validator.Validate) domai
 //	@Accept			json
 //	@Produce		json
 //	@Security		Bearer
-//	@Success		200	{object}	model.User	"User profile data"
+//	@Success		200	{object}	model.User	"user profile data"
 //	@Failure		500
 //	@Router			/user/profile [get]
 func (h *userHandlerImpl) UserProfileHandler(w http.ResponseWriter, r *http.Request) {

@@ -1,5 +1,45 @@
 basePath: /api/v1
 definitions:
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryCreateRequest:
+    properties:
+      name:
+        example: Electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+      parent_id:
+        example: 1
+        minimum: 1
+        type: integer
+      slug:
+        example: electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - name
+    - slug
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryUpdateRequest:
+    properties:
+      name:
+        example: Electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+      parent_id:
+        example: 1
+        minimum: 1
+        type: integer
+      slug:
+        example: electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - name
+    - slug
+    type: object
   github_com_arshamroshannejad_squidshop-backend_internal_entity.UserAuthRequest:
     properties:
       phone:
@@ -37,6 +77,22 @@ definitions:
         example: "+989029266635"
         type: string
     type: object
+  internal_handler.CategoryResponse:
+    properties:
+      id:
+        example: "1"
+        type: string
+      name:
+        example: Laptop
+        type: string
+      slug:
+        example: laptop
+        type: string
+      sub_categories:
+        items:
+          $ref: '#/definitions/internal_handler.CategoryResponse'
+        type: array
+    type: object
 host: api.squidshop.ir
 info:
   contact:
@@ -73,7 +129,7 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: auth handler (register | login)
+      summary: auth endpoint (register | login)
       tags:
       - Auth
   /auth/verify:
@@ -97,9 +153,137 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: verify auth handler
+      summary: verify auth endpoint
       tags:
       - Auth
+  /category:
+    get:
+      consumes:
+      - application/json
+      description: get all categories in db
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/internal_handler.CategoryResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: get categories endpoint
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: create new category
+      parameters:
+      - description: category data for create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create category endpoint
+      tags:
+      - Category
+  /category/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete category by id
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete category endpoint
+      tags:
+      - Category
+    put:
+      consumes:
+      - application/json
+      description: update category by id
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: category data for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: update category endpoint
+      tags:
+      - Category
+  /category/exists:
+    get:
+      consumes:
+      - application/json
+      description: check category exists with name and slug. at least one of them
+        must be set
+      parameters:
+      - description: category name
+        in: query
+        name: name
+        type: string
+      - description: category slug
+        in: query
+        name: slug
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: exists category endpoint
+      tags:
+      - Category
   /user/profile:
     get:
       consumes:
@@ -109,7 +293,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: User profile data
+          description: user profile data
           schema:
             $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.User'
         "500":

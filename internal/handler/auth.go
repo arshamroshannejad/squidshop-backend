@@ -7,6 +7,7 @@ import (
 
 	"github.com/arshamroshannejad/squidshop-backend/internal/domain"
 	"github.com/arshamroshannejad/squidshop-backend/internal/entity"
+	"github.com/arshamroshannejad/squidshop-backend/internal/helper"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -24,7 +25,7 @@ func NewAuthHandler(service domain.Service, validator *validator.Validate) domai
 
 // AuthUserHandler godoc
 //
-//	@Summary		auth handler (register | login)
+//	@Summary		auth endpoint (register | login)
 //	@Description	if user exists it will log in else register. it also sends otp code to user phone
 //	@Accept			json
 //	@Produce		json
@@ -39,13 +40,15 @@ func (u *authHandlerImpl) AuthUserHandler(w http.ResponseWriter, r *http.Request
 	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		resp, _ := json.Marshal(helper.M{"error": err.Error()})
+		w.Write(resp)
 		return
 	}
 	if err := u.validator.Struct(reqBody); err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		resp, _ := json.Marshal(helper.M{"error": err.Error()})
+		w.Write(resp)
 		return
 	}
 	if err := u.service.User().CreateUser(r.Context(), &reqBody); err != nil {
@@ -67,7 +70,7 @@ func (u *authHandlerImpl) AuthUserHandler(w http.ResponseWriter, r *http.Request
 
 // VerifyAuthUserHandler godoc
 //
-//	@Summary		verify auth handler
+//	@Summary		verify auth endpoint
 //	@Description	verify otp code and return access token
 //	@Accept			json
 //	@Produce		json
@@ -82,13 +85,15 @@ func (u *authHandlerImpl) VerifyAuthUserHandler(w http.ResponseWriter, r *http.R
 	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		resp, _ := json.Marshal(helper.M{"error": err.Error()})
+		w.Write(resp)
 		return
 	}
 	if err := u.validator.Struct(reqBody); err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, err.Error())))
+		resp, _ := json.Marshal(helper.M{"error": err.Error()})
+		w.Write(resp)
 		return
 	}
 	isValid, err := u.service.OTP().Verify(r.Context(), reqBody.Phone, reqBody.Code)

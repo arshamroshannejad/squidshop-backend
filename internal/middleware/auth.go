@@ -46,13 +46,12 @@ func RequireAuth(cfg *config.Config) func(http.Handler) http.Handler {
 					w.Header().Set("Content-Type", "application/json")
 					w.WriteHeader(http.StatusUnauthorized)
 					w.Write([]byte(`{"error":"token is expired"}`))
-					return
 				default:
 					w.Header().Set("Content-Type", "application/json")
 					w.WriteHeader(http.StatusUnauthorized)
 					w.Write([]byte(`{"error":"invalid token"}`))
-					return
 				}
+				return
 			}
 			if !token.Valid {
 				w.Header().Set("Content-Type", "application/json")
@@ -79,6 +78,7 @@ func RequireAdmin(next http.Handler) http.Handler {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte(`{"error":"admin access required"}`))
+			return
 		}
 		next.ServeHTTP(w, r)
 	})

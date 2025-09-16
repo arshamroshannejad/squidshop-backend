@@ -10,18 +10,20 @@ import (
 )
 
 type serviceImpl struct {
-	userRepository domain.UserRepository
-	redisDB        *redis.Client
-	logger         *slog.Logger
-	cfg            *config.Config
+	userRepository     domain.UserRepository
+	categoryRepository domain.CategoryRepository
+	redisDB            *redis.Client
+	logger             *slog.Logger
+	cfg                *config.Config
 }
 
 func NewService(repositories domain.Repository, redisDB *redis.Client, logger *slog.Logger, cfg *config.Config) domain.Service {
 	return &serviceImpl{
-		userRepository: repositories.User(),
-		redisDB:        redisDB,
-		logger:         logger,
-		cfg:            cfg,
+		userRepository:     repositories.User(),
+		categoryRepository: repositories.Category(),
+		redisDB:            redisDB,
+		logger:             logger,
+		cfg:                cfg,
 	}
 }
 
@@ -35,4 +37,8 @@ func (s *serviceImpl) OTP() domain.OTPService {
 
 func (s *serviceImpl) Sms() domain.SmsService {
 	return NewSmsService(s.logger, s.cfg)
+}
+
+func (s *serviceImpl) Category() domain.CategoryService {
+	return NewCategoryService(s.categoryRepository, s.logger)
 }

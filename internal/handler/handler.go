@@ -7,16 +7,18 @@ import (
 )
 
 type handlerImpl struct {
-	authHandler domain.AuthHandler
-	userHandler domain.UserHandler
+	authHandler     domain.AuthHandler
+	userHandler     domain.UserHandler
+	categoryHandler domain.CategoryHandler
 }
 
 func NewHandler(services domain.Service) domain.Handler {
 	v := validator.New()
 	_ = helper.RegisterValidations(v)
 	return &handlerImpl{
-		authHandler: NewAuthHandler(services, v),
-		userHandler: NewUserHandler(services, v),
+		authHandler:     NewAuthHandler(services, v),
+		userHandler:     NewUserHandler(services, v),
+		categoryHandler: NewCategoryHandler(services, v),
 	}
 }
 
@@ -26,4 +28,8 @@ func (h *handlerImpl) Auth() domain.AuthHandler {
 
 func (h *handlerImpl) User() domain.UserHandler {
 	return h.userHandler
+}
+
+func (h *handlerImpl) Category() domain.CategoryHandler {
+	return h.categoryHandler
 }

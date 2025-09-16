@@ -36,7 +36,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "auth handler (register | login)",
+                "summary": "auth endpoint (register | login)",
                 "parameters": [
                     {
                         "description": "phone for register or login",
@@ -73,7 +73,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "verify auth handler",
+                "summary": "verify auth endpoint",
                 "parameters": [
                     {
                         "description": "phone and code for register or login",
@@ -91,6 +91,207 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/category": {
+            "get": {
+                "description": "get all categories in db",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "get categories endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_handler.CategoryResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "create new category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "create category endpoint",
+                "parameters": [
+                    {
+                        "description": "category data for create",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/category/exists": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "check category exists with name and slug. at least one of them must be set",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "exists category endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category name",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "category slug",
+                        "name": "slug",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "update category by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "update category endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "category data for update",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "delete category by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "delete category endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -118,7 +319,7 @@ const docTemplate = `{
                 "summary": "user profile endpoint",
                 "responses": {
                     "200": {
-                        "description": "User profile data",
+                        "description": "user profile data",
                         "schema": {
                             "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.User"
                         }
@@ -131,6 +332,58 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryCreateRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "slug"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "example": "Electronics"
+                },
+                "parent_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "example": "electronics"
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryUpdateRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "slug"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "example": "Electronics"
+                },
+                "parent_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "example": "electronics"
+                }
+            }
+        },
         "github_com_arshamroshannejad_squidshop-backend_internal_entity.UserAuthRequest": {
             "type": "object",
             "required": [
@@ -180,6 +433,29 @@ const docTemplate = `{
                 "phone": {
                     "type": "string",
                     "example": "+989029266635"
+                }
+            }
+        },
+        "internal_handler.CategoryResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Laptop"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "laptop"
+                },
+                "sub_categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_handler.CategoryResponse"
+                    }
                 }
             }
         }
