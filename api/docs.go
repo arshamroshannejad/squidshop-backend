@@ -117,7 +117,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_handler.CategoryResponse"
+                                "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Category"
                             }
                         }
                     },
@@ -299,6 +299,264 @@ const docTemplate = `{
                 }
             }
         },
+        "/product": {
+            "get": {
+                "description": "get all products in db",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "get all products endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Product"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "create product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "create product endpoint",
+                "parameters": [
+                    {
+                        "description": "product data for create",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/product/exists/{slug}": {
+            "get": {
+                "description": "check if product exists by slug",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "exists product endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/product/id/{id}": {
+            "get": {
+                "description": "get product by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "get product by id endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Product"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/product/slug/{slug}": {
+            "get": {
+                "description": "get product by slug",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "get product by slug endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Product"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/product/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "update product by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "update product endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "product data for update",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "delete product by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "delete product endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/user/profile": {
             "get": {
                 "security": [
@@ -384,6 +642,110 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCreateRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "description",
+                "name",
+                "price",
+                "quantity",
+                "short_description",
+                "slug"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "example": "lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "call of duty black ops 4"
+                },
+                "price": {
+                    "type": "number",
+                    "minimum": 1,
+                    "example": 23400.23
+                },
+                "quantity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 10
+                },
+                "short_description": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "call-of-duty-black-ops-4"
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductUpdateRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "description",
+                "name",
+                "price",
+                "quantity",
+                "short_description",
+                "slug"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "example": "lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "call of duty black ops 4"
+                },
+                "price": {
+                    "type": "number",
+                    "minimum": 1,
+                    "example": 23400.23
+                },
+                "quantity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 10
+                },
+                "short_description": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "example": "call-of-duty-black-ops-4"
+                }
+            }
+        },
         "github_com_arshamroshannejad_squidshop-backend_internal_entity.UserAuthRequest": {
             "type": "object",
             "required": [
@@ -415,6 +777,74 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_arshamroshannejad_squidshop-backend_internal_model.Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Laptop"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "laptop"
+                },
+                "sub_categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Category"
+                    }
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_model.Product": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-09-12T00:12:12.123456789Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Call of Duty black ops 4 is a first-person shooter game"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Call of Duty black ops 4"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 19.99
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "short_description": {
+                    "type": "string",
+                    "example": "Call of Duty black ops 4 is a first-person shooter game"
+                },
+                "slug": {
+                    "type": "string",
+                    "example": "call-of-duty-black-ops-4"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2025-09-12T00:12:12.123456789Z"
+                }
+            }
+        },
         "github_com_arshamroshannejad_squidshop-backend_internal_model.User": {
             "type": "object",
             "properties": {
@@ -433,29 +863,6 @@ const docTemplate = `{
                 "phone": {
                     "type": "string",
                     "example": "+989029266635"
-                }
-            }
-        },
-        "internal_handler.CategoryResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "example": "1"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Laptop"
-                },
-                "slug": {
-                    "type": "string",
-                    "example": "laptop"
-                },
-                "sub_categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/internal_handler.CategoryResponse"
-                    }
                 }
             }
         }

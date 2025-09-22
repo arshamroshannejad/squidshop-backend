@@ -69,6 +69,50 @@ func SetupRoutes(db *sql.DB, redisDB *redis.Client, logger *slog.Logger, cfg *co
 			),
 		),
 	)
+	mux.HandleFunc(
+		"GET /api/v1/product",
+		handlers.Product().GetAllProductsHandler,
+	)
+	mux.HandleFunc(
+		"GET /api/v1/product/id/{id}",
+		handlers.Product().GetProductByIDHandler,
+	)
+	mux.HandleFunc(
+		"GET /api/v1/product/slug/{slug}",
+		handlers.Product().GetProductBySlugHandler,
+	)
+	mux.Handle(
+		"POST /api/v1/product",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Product().CreateProductHandler),
+			),
+		),
+	)
+	mux.Handle(
+		"PUT /api/v1/product/{id}",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Product().UpdateProductHandler),
+			),
+		),
+	)
+	mux.Handle(
+		"DELETE /api/v1/product/{id}",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Product().DeleteProductHandler),
+			),
+		),
+	)
+	mux.Handle(
+		"GET /api/v1/product/exists/{slug}",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.Product().ExistsProductHandler),
+			),
+		),
+	)
 	mux.Handle("/docs/", swagger.Handler(
 		swagger.URL("doc.json"),
 		swagger.DeepLinking(true),

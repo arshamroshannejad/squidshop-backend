@@ -5,4 +5,5 @@ type Service interface {
 	OTP() OTPService
 	Sms() SmsService
 	Category() CategoryService
+	Product() ProductService
 }

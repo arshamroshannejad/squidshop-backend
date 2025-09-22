@@ -12,6 +12,7 @@ import (
 type serviceImpl struct {
 	userRepository     domain.UserRepository
 	categoryRepository domain.CategoryRepository
+	productRepository  domain.ProductRepository
 	redisDB            *redis.Client
 	logger             *slog.Logger
 	cfg                *config.Config
@@ -21,6 +22,7 @@ func NewService(repositories domain.Repository, redisDB *redis.Client, logger *s
 	return &serviceImpl{
 		userRepository:     repositories.User(),
 		categoryRepository: repositories.Category(),
+		productRepository:  repositories.Product(),
 		redisDB:            redisDB,
 		logger:             logger,
 		cfg:                cfg,
@@ -41,4 +43,8 @@ func (s *serviceImpl) Sms() domain.SmsService {
 
 func (s *serviceImpl) Category() domain.CategoryService {
 	return NewCategoryService(s.categoryRepository, s.logger)
+}
+
+func (s *serviceImpl) Product() domain.ProductService {
+	return NewProductService(s.productRepository, s.logger)
 }
