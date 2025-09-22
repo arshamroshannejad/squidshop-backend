@@ -82,6 +82,20 @@ definitions:
     - short_description
     - slug
     type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest:
+    properties:
+      rate:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        example: 5
+        type: integer
+    required:
+    - rate
+    type: object
   github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductUpdateRequest:
     properties:
       category_id:
@@ -164,6 +178,9 @@ definitions:
     type: object
   github_com_arshamroshannejad_squidshop-backend_internal_model.Product:
     properties:
+      average_rating:
+        example: 4.5
+        type: number
       category_id:
         example: "1"
         type: string
@@ -184,6 +201,9 @@ definitions:
         type: number
       quantity:
         example: 10
+        type: integer
+      rating_count:
+        example: 12
         type: integer
       short_description:
         example: Call of Duty black ops 4 is a first-person shooter game
@@ -498,6 +518,61 @@ paths:
       summary: update product endpoint
       tags:
       - Product
+  /product/{id}/rating:
+    delete:
+      consumes:
+      - application/json
+      description: delete product rating
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete product rating endpoint
+      tags:
+      - ProductRating
+    post:
+      consumes:
+      - application/json
+      description: create or update product rating
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product rating data for create or update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create or update product rating endpoint
+      tags:
+      - ProductRating
   /product/exists/{slug}:
     get:
       consumes:

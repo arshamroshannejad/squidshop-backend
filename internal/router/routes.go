@@ -113,6 +113,18 @@ func SetupRoutes(db *sql.DB, redisDB *redis.Client, logger *slog.Logger, cfg *co
 			),
 		),
 	)
+	mux.Handle(
+		"POST /api/v1/product/{id}/rating",
+		middleware.RequireAuth(cfg)(
+			http.HandlerFunc(handlers.ProductRating().CreateOrUpdateProductRatingHandler),
+		),
+	)
+	mux.Handle(
+		"DELETE /api/v1/product/{id}/rating",
+		middleware.RequireAuth(cfg)(
+			http.HandlerFunc(handlers.ProductRating().DeleteProductRatingHandler),
+		),
+	)
 	mux.Handle("/docs/", swagger.Handler(
 		swagger.URL("doc.json"),
 		swagger.DeepLinking(true),

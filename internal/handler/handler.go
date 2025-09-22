@@ -7,20 +7,22 @@ import (
 )
 
 type handlerImpl struct {
-	authHandler     domain.AuthHandler
-	userHandler     domain.UserHandler
-	categoryHandler domain.CategoryHandler
-	productHandler  domain.ProductHandler
+	authHandler          domain.AuthHandler
+	userHandler          domain.UserHandler
+	categoryHandler      domain.CategoryHandler
+	productHandler       domain.ProductHandler
+	productRatingHandler domain.ProductRatingHandler
 }
 
 func NewHandler(services domain.Service) domain.Handler {
 	v := validator.New()
 	_ = helper.RegisterValidations(v)
 	return &handlerImpl{
-		authHandler:     NewAuthHandler(services, v),
-		userHandler:     NewUserHandler(services, v),
-		categoryHandler: NewCategoryHandler(services, v),
-		productHandler:  NewProductHandler(services, v),
+		authHandler:          NewAuthHandler(services, v),
+		userHandler:          NewUserHandler(services, v),
+		categoryHandler:      NewCategoryHandler(services, v),
+		productHandler:       NewProductHandler(services, v),
+		productRatingHandler: NewProductRatingHandler(services, v),
 	}
 }
 
@@ -38,4 +40,8 @@ func (h *handlerImpl) Category() domain.CategoryHandler {
 
 func (h *handlerImpl) Product() domain.ProductHandler {
 	return h.productHandler
+}
+
+func (h *handlerImpl) ProductRating() domain.ProductRatingHandler {
+	return h.productRatingHandler
 }

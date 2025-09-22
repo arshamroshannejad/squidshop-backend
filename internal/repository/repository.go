@@ -7,16 +7,18 @@ import (
 )
 
 type repositoryImpl struct {
-	userRepository     domain.UserRepository
-	categoryRepository domain.CategoryRepository
-	productRepository  domain.ProductRepository
+	userRepository          domain.UserRepository
+	categoryRepository      domain.CategoryRepository
+	productRepository       domain.ProductRepository
+	productRatingRepository domain.ProductRatingRepository
 }
 
 func NewRepository(db *sql.DB) domain.Repository {
 	return &repositoryImpl{
-		userRepository:     NewUserRepository(db),
-		categoryRepository: NewCategoryRepository(db),
-		productRepository:  NewProductRepository(db),
+		userRepository:          NewUserRepository(db),
+		categoryRepository:      NewCategoryRepository(db),
+		productRepository:       NewProductRepository(db),
+		productRatingRepository: NewProductRatingRepository(db),
 	}
 }
 
@@ -30,4 +32,8 @@ func (r *repositoryImpl) Category() domain.CategoryRepository {
 
 func (r *repositoryImpl) Product() domain.ProductRepository {
 	return r.productRepository
+}
+
+func (r *repositoryImpl) ProductRating() domain.ProductRatingRepository {
+	return r.productRatingRepository
 }

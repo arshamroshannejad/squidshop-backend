@@ -6,4 +6,5 @@ type Service interface {
 	Sms() SmsService
 	Category() CategoryService
 	Product() ProductService
+	ProductRating() ProductRatingService
 }

@@ -10,22 +10,24 @@ import (
 )
 
 type serviceImpl struct {
-	userRepository     domain.UserRepository
-	categoryRepository domain.CategoryRepository
-	productRepository  domain.ProductRepository
-	redisDB            *redis.Client
-	logger             *slog.Logger
-	cfg                *config.Config
+	userRepository          domain.UserRepository
+	categoryRepository      domain.CategoryRepository
+	productRepository       domain.ProductRepository
+	productRatingRepository domain.ProductRatingRepository
+	redisDB                 *redis.Client
+	logger                  *slog.Logger
+	cfg                     *config.Config
 }
 
 func NewService(repositories domain.Repository, redisDB *redis.Client, logger *slog.Logger, cfg *config.Config) domain.Service {
 	return &serviceImpl{
-		userRepository:     repositories.User(),
-		categoryRepository: repositories.Category(),
-		productRepository:  repositories.Product(),
-		redisDB:            redisDB,
-		logger:             logger,
-		cfg:                cfg,
+		userRepository:          repositories.User(),
+		categoryRepository:      repositories.Category(),
+		productRepository:       repositories.Product(),
+		productRatingRepository: repositories.ProductRating(),
+		redisDB:                 redisDB,
+		logger:                  logger,
+		cfg:                     cfg,
 	}
 }
 
@@ -47,4 +49,8 @@ func (s *serviceImpl) Category() domain.CategoryService {
 
 func (s *serviceImpl) Product() domain.ProductService {
 	return NewProductService(s.productRepository, s.logger)
+}
+
+func (s *serviceImpl) ProductRating() domain.ProductRatingService {
+	return NewProductRatingService(s.productRatingRepository, s.logger)
 }

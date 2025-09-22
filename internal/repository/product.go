@@ -32,9 +32,15 @@ func (r *productRepositoryImpl) GetAll(ctx context.Context) (*[]model.Product, e
 		    p.quantity,
 		    p.created_at,
 		    p.updated_at,
-		    p.category_id
+		    p.category_id,
+		    COALESCE(AVG(pr.rating), 0) AS average_rating,
+	    	COUNT(pr.rating) AS rating_count
 		FROM
 		    products p
+		LEFT JOIN
+			product_ratings pr ON p.id = pr.product_id
+		GROUP BY
+		    p.id
 	`
 	rows, err := r.db.QueryContext(ctx, getAllProductsQuery)
 	if err != nil {
@@ -56,11 +62,17 @@ func (r *productRepositoryImpl) GetByID(ctx context.Context, productID string) (
 		    p.quantity,
 		    p.created_at,
 		    p.updated_at,
-		    p.category_id
+		    p.category_id,
+			COALESCE(AVG(pr.rating), 0) AS average_rating,
+	    	COUNT(pr.rating) AS rating_count
 		FROM
 		    products p
+		LEFT JOIN
+			product_ratings pr ON p.id = pr.product_id
 		WHERE
 		    p.id = $1
+		GROUP BY
+		    p.id
 	`
 	args := []any{productID}
 	row := r.db.QueryRowContext(ctx, getProductByIDQuery, args...)
@@ -79,11 +91,17 @@ func (r *productRepositoryImpl) GetBySlug(ctx context.Context, productSlug strin
 		    p.quantity,
 		    p.created_at,
 		    p.updated_at,
-		    p.category_id
+		    p.category_id,
+			COALESCE(AVG(pr.rating), 0) AS average_rating,
+	    	COUNT(pr.rating) AS rating_count
 		FROM
 		    products p
+		LEFT JOIN
+			product_ratings pr ON p.id = pr.product_id
 		WHERE
 		    p.slug = $1
+		GROUP BY
+		    p.id
 	`
 	args := []any{productSlug}
 	row := r.db.QueryRowContext(ctx, getProductBySlugQuery, args...)
@@ -136,6 +154,8 @@ func collectProductsRows(rows *sql.Rows) (*[]model.Product, error) {
 			&product.CreatedAt,
 			&product.UpdatedAt,
 			&product.CategoryID,
+			&product.AverageRating,
+			&product.RatingCount,
 		)
 		if err != nil {
 			return nil, err
@@ -158,6 +178,8 @@ func collectProductRow(row *sql.Row) (*model.Product, error) {
 		&product.CreatedAt,
 		&product.UpdatedAt,
 		&product.CategoryID,
+		&product.AverageRating,
+		&product.RatingCount,
 	)
 	if err != nil {
 		return nil, err

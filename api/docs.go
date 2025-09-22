@@ -557,6 +557,93 @@ const docTemplate = `{
                 }
             }
         },
+        "/product/{id}/rating": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "create or update product rating",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductRating"
+                ],
+                "summary": "create or update product rating endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "product rating data for create or update",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "delete product rating",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductRating"
+                ],
+                "summary": "delete product rating endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/user/profile": {
             "get": {
                 "security": [
@@ -694,6 +781,25 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest": {
+            "type": "object",
+            "required": [
+                "rate"
+            ],
+            "properties": {
+                "rate": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "example": 5
+                }
+            }
+        },
         "github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductUpdateRequest": {
             "type": "object",
             "required": [
@@ -803,6 +909,10 @@ const docTemplate = `{
         "github_com_arshamroshannejad_squidshop-backend_internal_model.Product": {
             "type": "object",
             "properties": {
+                "average_rating": {
+                    "type": "number",
+                    "example": 4.5
+                },
                 "category_id": {
                     "type": "string",
                     "example": "1"
@@ -830,6 +940,10 @@ const docTemplate = `{
                 "quantity": {
                     "type": "integer",
                     "example": 10
+                },
+                "rating_count": {
+                    "type": "integer",
+                    "example": 12
                 },
                 "short_description": {
                     "type": "string",

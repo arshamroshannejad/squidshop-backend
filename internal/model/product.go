@@ -13,4 +13,6 @@ type Product struct {
 	CreatedAt        time.Time `json:"created_at" example:"2025-09-12T00:12:12.123456789Z"`
 	UpdatedAt        time.Time `json:"updated_at" example:"2025-09-12T00:12:12.123456789Z"`
 	CategoryID       string    `json:"category_id" example:"1"`
+	AverageRating    float64   `json:"average_rating" example:"4.5"`
+	RatingCount      int       `json:"rating_count" example:"12"`
 }
