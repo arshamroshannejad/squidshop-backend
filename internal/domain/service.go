@@ -7,4 +7,6 @@ type Service interface {
 	Category() CategoryService
 	Product() ProductService
 	ProductRating() ProductRatingService
+	ProductImage() ProductImageService
+	S3() S3Service
 }

@@ -6,5 +6,5 @@ import (
 )
 
 func Timeout(next http.Handler) http.Handler {
-	return http.TimeoutHandler(next, 5*time.Second, "Request timeout")
+	return http.TimeoutHandler(next, 10*time.Second, "Request timeout")
 }

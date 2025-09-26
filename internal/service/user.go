@@ -62,14 +62,14 @@ func (s *userServiceImpl) CreateUser(ctx context.Context, user *entity.UserAuthR
 }
 
 func (s *userServiceImpl) GenerateUserJwtToken(ctx context.Context, user *model.User) (string, error) {
-	exp := time.Now().Add(s.cfg.App.AccessHourTTL).Unix()
+	exp := time.Now().Add(s.cfg.Jwt.AccessHourTTL).Unix()
 	claims := jwt.MapClaims{
 		"user_id":  user.ID,
 		"phone":    user.Phone,
 		"is_admin": user.IsAdmin,
 		"exp":      exp,
 	}
-	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(s.cfg.App.Secret))
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(s.cfg.Jwt.Secret))
 	if err != nil {
 		s.logger.Error("failed to create access token", "error:", err)
 	}

@@ -29,7 +29,7 @@ func (s *smsServiceImpl) Send(msg, phone string) error {
 	}
 	smsReq := entity.SmsRequest{
 		Recipient: []string{phone},
-		Sender:    s.cfg.App.SmsSender,
+		Sender:    s.cfg.Sms.Sender,
 		Message:   msg,
 	}
 	payload, err := json.Marshal(&smsReq)
@@ -37,13 +37,13 @@ func (s *smsServiceImpl) Send(msg, phone string) error {
 		s.logger.Error("failed to marshal sms request", "error", err)
 		return err
 	}
-	req, err := http.NewRequest(http.MethodPost, s.cfg.App.SmsService, bytes.NewBuffer(payload))
+	req, err := http.NewRequest(http.MethodPost, s.cfg.Sms.Service, bytes.NewBuffer(payload))
 	if err != nil {
 		s.logger.Error("failed to create sms request", "error", err)
 		return err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("apikey", s.cfg.App.SmsApiKey)
+	req.Header.Set("apikey", s.cfg.Sms.ApiKey)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		s.logger.Error("failed to send sms", "error", err)

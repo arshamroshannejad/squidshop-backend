@@ -38,7 +38,7 @@ func RequireAuth(cfg *config.Config) func(http.Handler) http.Handler {
 			tokenString := parts[1]
 			claims := &Claims{}
 			token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (any, error) {
-				return []byte(cfg.App.Secret), nil
+				return []byte(cfg.Jwt.Secret), nil
 			})
 			if err != nil {
 				switch {

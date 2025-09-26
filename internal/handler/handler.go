@@ -12,6 +12,7 @@ type handlerImpl struct {
 	categoryHandler      domain.CategoryHandler
 	productHandler       domain.ProductHandler
 	productRatingHandler domain.ProductRatingHandler
+	productImageHandler  domain.ProductImageHandler
 }
 
 func NewHandler(services domain.Service) domain.Handler {
@@ -23,6 +24,7 @@ func NewHandler(services domain.Service) domain.Handler {
 		categoryHandler:      NewCategoryHandler(services, v),
 		productHandler:       NewProductHandler(services, v),
 		productRatingHandler: NewProductRatingHandler(services, v),
+		productImageHandler:  NewProductImageHandler(services, v),
 	}
 }
 
@@ -44,4 +46,8 @@ func (h *handlerImpl) Product() domain.ProductHandler {
 
 func (h *handlerImpl) ProductRating() domain.ProductRatingHandler {
 	return h.productRatingHandler
+}
+
+func (h *handlerImpl) ProductImage() domain.ProductImageHandler {
+	return h.productImageHandler
 }

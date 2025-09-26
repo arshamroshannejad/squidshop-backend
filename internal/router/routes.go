@@ -114,15 +114,23 @@ func SetupRoutes(db *sql.DB, redisDB *redis.Client, logger *slog.Logger, cfg *co
 		),
 	)
 	mux.Handle(
-		"POST /api/v1/product/{id}/rating",
+		"POST /api/v1/product/rating/{id}",
 		middleware.RequireAuth(cfg)(
 			http.HandlerFunc(handlers.ProductRating().CreateOrUpdateProductRatingHandler),
 		),
 	)
 	mux.Handle(
-		"DELETE /api/v1/product/{id}/rating",
+		"DELETE /api/v1/product/rating/{id}",
 		middleware.RequireAuth(cfg)(
 			http.HandlerFunc(handlers.ProductRating().DeleteProductRatingHandler),
+		),
+	)
+	mux.Handle(
+		"POST /api/v1/product/image/{id}",
+		middleware.RequireAuth(cfg)(
+			middleware.RequireAdmin(
+				http.HandlerFunc(handlers.ProductImage().CreateProductImageHandler),
+			),
 		),
 	)
 	mux.Handle("/docs/", swagger.Handler(

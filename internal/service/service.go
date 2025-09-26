@@ -14,6 +14,7 @@ type serviceImpl struct {
 	categoryRepository      domain.CategoryRepository
 	productRepository       domain.ProductRepository
 	productRatingRepository domain.ProductRatingRepository
+	productImageRepository  domain.ProductImageRepository
 	redisDB                 *redis.Client
 	logger                  *slog.Logger
 	cfg                     *config.Config
@@ -25,6 +26,7 @@ func NewService(repositories domain.Repository, redisDB *redis.Client, logger *s
 		categoryRepository:      repositories.Category(),
 		productRepository:       repositories.Product(),
 		productRatingRepository: repositories.ProductRating(),
+		productImageRepository:  repositories.ProductImage(),
 		redisDB:                 redisDB,
 		logger:                  logger,
 		cfg:                     cfg,
@@ -53,4 +55,12 @@ func (s *serviceImpl) Product() domain.ProductService {
 
 func (s *serviceImpl) ProductRating() domain.ProductRatingService {
 	return NewProductRatingService(s.productRatingRepository, s.logger)
+}
+
+func (s *serviceImpl) ProductImage() domain.ProductImageService {
+	return NewProductImageService(s.productImageRepository, s.logger)
+}
+
+func (s *serviceImpl) S3() domain.S3Service {
+	return NewS3Service(s.cfg, s.logger)
 }

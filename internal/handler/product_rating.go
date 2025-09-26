@@ -28,14 +28,14 @@ func NewProductRatingHandler(service domain.Service, validator *validator.Valida
 //	@Description	create or update product rating
 //	@Accept			json
 //	@Produce		json
-//	@Tags			ProductRating
+//	@Tags			Product Rating
 //	@Param			id		path	string						true	"product id"
 //	@Param			request	body	entity.ProductRatingRequest	true	"product rating data for create or update"
 //	@Security		Bearer
 //	@Success		200
 //	@Failure		400
 //	@Failure		500
-//	@Router			/product/{id}/rating [post]
+//	@Router			/product/rating/{id} [post]
 func (h *productRatingHandlerImpl) CreateOrUpdateProductRatingHandler(w http.ResponseWriter, r *http.Request) {
 	currentUserID := r.Context().Value(helper.CtxUserID).(string)
 	productID := r.PathValue("id")
@@ -67,13 +67,13 @@ func (h *productRatingHandlerImpl) CreateOrUpdateProductRatingHandler(w http.Res
 //	@Description	delete product rating
 //	@Accept			json
 //	@Produce		json
-//	@Tags			ProductRating
+//	@Tags			Product Rating
 //	@Param			id	path	string	true	"product id"
 //	@Security		Bearer
 //	@Success		204
 //	@Failure		400
 //	@Failure		500
-//	@Router			/product/{id}/rating [delete]
+//	@Router			/product/rating/{id} [delete]
 func (h *productRatingHandlerImpl) DeleteProductRatingHandler(w http.ResponseWriter, r *http.Request) {
 	currentUserID := r.Context().Value(helper.CtxUserID).(string)
 	productID := r.PathValue("id")

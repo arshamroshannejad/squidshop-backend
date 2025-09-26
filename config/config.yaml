@@ -2,18 +2,13 @@ app:
   port: 8000
   debug: true
   base_api: /api/v1
-  secret: awdawdawdawd
-  access_hour_ttl: 168h
-  sms_service:
-  sms_sender:
-  sms_api_key:
 
 postgres:
   host: 0.0.0.0
   port: 5432
   username: postgres_user
   password: postgres_password
-  database:
+  database: squidshop
   max_open_conns: 25
   max_idle_conns: 25
   conn_max_idle_time: 15m
@@ -22,3 +17,19 @@ redis:
   host: 0.0.0.0
   port: 6379
   password: redis_password
+
+jwt:
+  secret: jwt_secret
+  access_hour_ttl: 168h
+
+sms:
+  sms_service: 
+  sms_sender: 
+  sms_api_key: 
+
+s3:
+  bucket: 
+  region: 
+  access_key: 
+  secret_key: 
+  endpoint: 

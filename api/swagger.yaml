@@ -518,61 +518,6 @@ paths:
       summary: update product endpoint
       tags:
       - Product
-  /product/{id}/rating:
-    delete:
-      consumes:
-      - application/json
-      description: delete product rating
-      parameters:
-      - description: product id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      security:
-      - Bearer: []
-      summary: delete product rating endpoint
-      tags:
-      - ProductRating
-    post:
-      consumes:
-      - application/json
-      description: create or update product rating
-      parameters:
-      - description: product id
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: product rating data for create or update
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      security:
-      - Bearer: []
-      summary: create or update product rating endpoint
-      tags:
-      - ProductRating
   /product/exists/{slug}:
     get:
       consumes:
@@ -619,6 +564,91 @@ paths:
       summary: get product by id endpoint
       tags:
       - Product
+  /product/image/{id}:
+    post:
+      consumes:
+      - multipart/form-data
+      description: create product image by product id
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product images
+        in: formData
+        name: images
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create product image endpoint
+      tags:
+      - Product Image
+  /product/rating/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete product rating
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete product rating endpoint
+      tags:
+      - Product Rating
+    post:
+      consumes:
+      - application/json
+      description: create or update product rating
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product rating data for create or update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create or update product rating endpoint
+      tags:
+      - Product Rating
   /product/slug/{slug}:
     get:
       consumes:
