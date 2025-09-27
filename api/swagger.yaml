@@ -40,6 +40,27 @@ definitions:
     - name
     - slug
     type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentCreateRequest:
+    properties:
+      comment:
+        example: nice product
+        minLength: 1
+        type: string
+      parent_id:
+        example: 12
+        type: integer
+    required:
+    - comment
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentUpdateRequest:
+    properties:
+      comment:
+        example: nice product
+        minLength: 1
+        type: string
+    required:
+    - comment
+    type: object
   github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCreateRequest:
     properties:
       category_id:
@@ -534,6 +555,95 @@ paths:
       summary: update product endpoint
       tags:
       - Product
+  /product/comment/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete product comment
+      parameters:
+      - description: product comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete product comment endpoint
+      tags:
+      - Product Comment
+    post:
+      consumes:
+      - application/json
+      description: create product comment
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product comment data for create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create product comment endpoint
+      tags:
+      - Product Comment
+    put:
+      consumes:
+      - application/json
+      description: update product comment
+      parameters:
+      - description: product comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product comment data for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: update product comment endpoint
+      tags:
+      - Product Comment
   /product/exists/{slug}:
     get:
       consumes:

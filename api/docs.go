@@ -368,6 +368,146 @@ const docTemplate = `{
                 }
             }
         },
+        "/product/comment/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "update product comment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Comment"
+                ],
+                "summary": "update product comment endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product comment id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "product comment data for update",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "create product comment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Comment"
+                ],
+                "summary": "create product comment endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "product comment data for create",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "delete product comment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Comment"
+                ],
+                "summary": "delete product comment endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product comment id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/product/exists/{slug}": {
             "get": {
                 "description": "check if product exists by slug",
@@ -773,6 +913,36 @@ const docTemplate = `{
                     "maxLength": 100,
                     "minLength": 1,
                     "example": "electronics"
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentCreateRequest": {
+            "type": "object",
+            "required": [
+                "comment"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "example": "nice product"
+                },
+                "parent_id": {
+                    "type": "integer",
+                    "example": 12
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentUpdateRequest": {
+            "type": "object",
+            "required": [
+                "comment"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "example": "nice product"
                 }
             }
         },

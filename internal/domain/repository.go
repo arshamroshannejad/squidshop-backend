@@ -6,4 +6,5 @@ type Repository interface {
 	Product() ProductRepository
 	ProductRating() ProductRatingRepository
 	ProductImage() ProductImageRepository
+	ProductComment() ProductCommentRepository
 }

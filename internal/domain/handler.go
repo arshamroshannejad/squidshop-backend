@@ -7,4 +7,5 @@ type Handler interface {
 	Product() ProductHandler
 	ProductRating() ProductRatingHandler
 	ProductImage() ProductImageHandler
+	ProductComment() ProductCommentHandler
 }
