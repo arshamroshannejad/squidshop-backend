@@ -22,7 +22,7 @@ func NewCategoryService(categoryRepository domain.CategoryRepository, logger *sl
 	}
 }
 
-func (s *categoryServiceImpl) GetAllCategories(ctx context.Context) (*[]model.Category, error) {
+func (s *categoryServiceImpl) GetAllCategories(ctx context.Context) ([]model.Category, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 	categories, err := s.categoryRepository.GetAll(ctx)

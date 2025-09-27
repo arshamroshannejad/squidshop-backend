@@ -9,7 +9,7 @@ import (
 )
 
 type CategoryRepository interface {
-	GetAll(ctx context.Context) (*[]model.Category, error)
+	GetAll(ctx context.Context) ([]model.Category, error)
 	Create(ctx context.Context, category *entity.CategoryCreateRequest) error
 	Update(ctx context.Context, categoryID string, category *entity.CategoryUpdateRequest) error
 	Delete(ctx context.Context, categoryID string) error
@@ -17,7 +17,7 @@ type CategoryRepository interface {
 }
 
 type CategoryService interface {
-	GetAllCategories(ctx context.Context) (*[]model.Category, error)
+	GetAllCategories(ctx context.Context) ([]model.Category, error)
 	CreateCategory(ctx context.Context, category *entity.CategoryCreateRequest) error
 	UpdateCategory(ctx context.Context, categoryID string, category *entity.CategoryUpdateRequest) error
 	DeleteCategory(ctx context.Context, categoryID string) error

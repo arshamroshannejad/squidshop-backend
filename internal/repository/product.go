@@ -21,7 +21,7 @@ func NewProductRepository(db *sql.DB) domain.ProductRepository {
 	}
 }
 
-func (r *productRepositoryImpl) GetAll(ctx context.Context) (*[]model.Products, error) {
+func (r *productRepositoryImpl) GetAll(ctx context.Context) ([]model.Products, error) {
 	const getAllProductsQuery string = `
 		SELECT 
 		    p.id,
@@ -165,8 +165,8 @@ func (r *productRepositoryImpl) Exists(ctx context.Context, productSlug string) 
 	return exists, nil
 }
 
-func collectProductsRows(rows *sql.Rows) (*[]model.Products, error) {
-	var products []model.Products
+func collectProductsRows(rows *sql.Rows) ([]model.Products, error) {
+	products := make([]model.Products, 0)
 	for rows.Next() {
 		var product model.Products
 		err := rows.Scan(
@@ -189,7 +189,7 @@ func collectProductsRows(rows *sql.Rows) (*[]model.Products, error) {
 		}
 		products = append(products, product)
 	}
-	return &products, nil
+	return products, nil
 }
 
 func collectProductRow(row *sql.Row) (*model.Product, error) {

@@ -26,7 +26,7 @@ func NewProductService(productRepository domain.ProductRepository, logger *slog.
 	}
 }
 
-func (s *productServiceImpl) GetAllProducts(ctx context.Context) (*[]model.Products, error) {
+func (s *productServiceImpl) GetAllProducts(ctx context.Context) ([]model.Products, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 	products, err := s.productRepository.GetAll(ctx)
@@ -34,9 +34,9 @@ func (s *productServiceImpl) GetAllProducts(ctx context.Context) (*[]model.Produ
 		s.logger.Error("failed to get all products", "error", err)
 		return nil, err
 	}
-	for i := range *products {
-		if (*products)[i].MainImage != nil {
-			(*products)[i].MainImage = helper.BuildMediaURL(s.config, (*products)[i].MainImage)
+	for i := range products {
+		if products[i].MainImage != nil {
+			products[i].MainImage = helper.BuildMediaURL(s.config, products[i].MainImage)
 		}
 	}
 	return products, nil

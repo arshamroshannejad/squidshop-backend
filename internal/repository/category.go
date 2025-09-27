@@ -20,7 +20,7 @@ func NewCategoryRepository(db *sql.DB) domain.CategoryRepository {
 	}
 }
 
-func (r *categoryRepositoryImpl) GetAll(ctx context.Context) (*[]model.Category, error) {
+func (r *categoryRepositoryImpl) GetAll(ctx context.Context) ([]model.Category, error) {
 	const query = `SELECT id, name, slug, parent_id FROM categories`
 	rows, err := r.db.QueryContext(ctx, query)
 	if err != nil {
@@ -32,7 +32,7 @@ func (r *categoryRepositoryImpl) GetAll(ctx context.Context) (*[]model.Category,
 		return nil, err
 	}
 	tree := buildCategoryTree(*categories, nil)
-	return &tree, nil
+	return tree, nil
 }
 
 func (r *categoryRepositoryImpl) Create(ctx context.Context, category *entity.CategoryCreateRequest) error {
@@ -85,7 +85,7 @@ func collectCategoryRows(rows *sql.Rows) (*[]model.Category, error) {
 }
 
 func buildCategoryTree(categories []model.Category, parentID *string) []model.Category {
-	var tree []model.Category
+	tree := make([]model.Category, 0)
 	for _, c := range categories {
 		if (c.ParentID == nil && parentID == nil) ||
 			(c.ParentID != nil && parentID != nil && *c.ParentID == *parentID) {
