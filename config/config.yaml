@@ -32,4 +32,5 @@ s3:
   region: 
   access_key: 
   secret_key: 
-  endpoint: 
+  endpoint:
+  domain: 

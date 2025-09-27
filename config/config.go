@@ -51,6 +51,7 @@ type S3 struct {
 	AccessKey string `yaml:"access_key"`
 	SecretKey string `yaml:"secret_key"`
 	Endpoint  string `yaml:"endpoint"`
+	Domain    string `yaml:"domain"`
 }
 
 type Config struct {

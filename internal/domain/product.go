@@ -9,7 +9,7 @@ import (
 )
 
 type ProductRepository interface {
-	GetAll(ctx context.Context) (*[]model.Product, error)
+	GetAll(ctx context.Context) (*[]model.Products, error)
 	GetByID(ctx context.Context, productID string) (*model.Product, error)
 	GetBySlug(ctx context.Context, productSlug string) (*model.Product, error)
 	Create(ctx context.Context, product *entity.ProductCreateRequest) error
@@ -19,7 +19,7 @@ type ProductRepository interface {
 }
 
 type ProductService interface {
-	GetAllProducts(ctx context.Context) (*[]model.Product, error)
+	GetAllProducts(ctx context.Context) (*[]model.Products, error)
 	GetProductByID(ctx context.Context, productID string) (*model.Product, error)
 	GetProductBySlug(ctx context.Context, productSlug string) (*model.Product, error)
 	CreateProduct(ctx context.Context, product *entity.ProductCreateRequest) error

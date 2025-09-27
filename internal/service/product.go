@@ -5,30 +5,39 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/arshamroshannejad/squidshop-backend/config"
 	"github.com/arshamroshannejad/squidshop-backend/internal/domain"
 	"github.com/arshamroshannejad/squidshop-backend/internal/entity"
+	"github.com/arshamroshannejad/squidshop-backend/internal/helper"
 	"github.com/arshamroshannejad/squidshop-backend/internal/model"
 )
 
 type productServiceImpl struct {
 	productRepository domain.ProductRepository
 	logger            *slog.Logger
+	config            *config.Config
 }
 
-func NewProductService(productRepository domain.ProductRepository, logger *slog.Logger) domain.ProductService {
+func NewProductService(productRepository domain.ProductRepository, logger *slog.Logger, config *config.Config) domain.ProductService {
 	return &productServiceImpl{
 		productRepository: productRepository,
 		logger:            logger,
+		config:            config,
 	}
 }
 
-func (s *productServiceImpl) GetAllProducts(ctx context.Context) (*[]model.Product, error) {
+func (s *productServiceImpl) GetAllProducts(ctx context.Context) (*[]model.Products, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 	products, err := s.productRepository.GetAll(ctx)
 	if err != nil {
-		s.logger.Error("failed to get all products")
+		s.logger.Error("failed to get all products", "error", err)
 		return nil, err
+	}
+	for i := range *products {
+		if (*products)[i].MainImage != nil {
+			(*products)[i].MainImage = helper.BuildMediaURL(s.config, (*products)[i].MainImage)
+		}
 	}
 	return products, nil
 }
@@ -41,6 +50,11 @@ func (s *productServiceImpl) GetProductByID(ctx context.Context, productID strin
 		s.logger.Error("failed to get product by id", "error", err)
 		return nil, err
 	}
+	if product.Images != nil {
+		for i := range product.Images {
+			product.Images[i].ImageURL = *helper.BuildMediaURL(s.config, &product.Images[i].ImageURL)
+		}
+	}
 	return product, nil
 }
 
@@ -51,6 +65,11 @@ func (s *productServiceImpl) GetProductBySlug(ctx context.Context, productSlug s
 	if err != nil {
 		s.logger.Error("failed to get product by slug", "error", err)
 		return nil, err
+	}
+	if product.Images != nil {
+		for i := range product.Images {
+			product.Images[i].ImageURL = *helper.BuildMediaURL(s.config, &product.Images[i].ImageURL)
+		}
 	}
 	return product, nil
 }

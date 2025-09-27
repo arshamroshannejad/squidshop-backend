@@ -970,6 +970,12 @@
                     "type": "string",
                     "example": "1"
                 },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.ProductImage"
+                    }
+                },
                 "name": {
                     "type": "string",
                     "example": "Call of Duty black ops 4"
@@ -997,6 +1003,23 @@
                 "updated_at": {
                     "type": "string",
                     "example": "2025-09-12T00:12:12.123456789Z"
+                }
+            }
+        },
+        "github_com_arshamroshannejad_squidshop-backend_internal_model.ProductImage": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://example.com/image.jpg"
+                },
+                "is_main": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         },

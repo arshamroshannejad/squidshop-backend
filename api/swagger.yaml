@@ -193,6 +193,10 @@ definitions:
       id:
         example: "1"
         type: string
+      images:
+        items:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.ProductImage'
+        type: array
       name:
         example: Call of Duty black ops 4
         type: string
@@ -214,6 +218,18 @@ definitions:
       updated_at:
         example: "2025-09-12T00:12:12.123456789Z"
         type: string
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_model.ProductImage:
+    properties:
+      id:
+        example: "1"
+        type: string
+      image_url:
+        example: https://example.com/image.jpg
+        type: string
+      is_main:
+        example: true
+        type: boolean
     type: object
   github_com_arshamroshannejad_squidshop-backend_internal_model.User:
     properties:

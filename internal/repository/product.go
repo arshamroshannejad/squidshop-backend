@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 
 	"github.com/arshamroshannejad/squidshop-backend/internal/domain"
 	"github.com/arshamroshannejad/squidshop-backend/internal/entity"
@@ -20,7 +21,7 @@ func NewProductRepository(db *sql.DB) domain.ProductRepository {
 	}
 }
 
-func (r *productRepositoryImpl) GetAll(ctx context.Context) (*[]model.Product, error) {
+func (r *productRepositoryImpl) GetAll(ctx context.Context) (*[]model.Products, error) {
 	const getAllProductsQuery string = `
 		SELECT 
 		    p.id,
@@ -34,13 +35,16 @@ func (r *productRepositoryImpl) GetAll(ctx context.Context) (*[]model.Product, e
 		    p.updated_at,
 		    p.category_id,
 		    COALESCE(AVG(pr.rating), 0) AS average_rating,
-	    	COUNT(pr.rating) AS rating_count
+	    	COUNT(pr.rating) AS rating_count,
+	    	pi.image_url AS main_image
 		FROM
 		    products p
 		LEFT JOIN
 			product_ratings pr ON p.id = pr.product_id
+		LEFT JOIN
+		        product_images pi ON p.id = pi.product_id AND pi.is_main = true
 		GROUP BY
-		    p.id
+		    p.id, pi.image_url
 	`
 	rows, err := r.db.QueryContext(ctx, getAllProductsQuery)
 	if err != nil {
@@ -64,11 +68,22 @@ func (r *productRepositoryImpl) GetByID(ctx context.Context, productID string) (
 		    p.updated_at,
 		    p.category_id,
 			COALESCE(AVG(pr.rating), 0) AS average_rating,
-	    	COUNT(pr.rating) AS rating_count
+	    	COUNT(pr.rating) AS rating_count,
+	    	COALESCE(
+				json_agg(
+					json_build_object(
+						'id', pi.id::text,
+						'image_url', pi.image_url,
+						'is_main', pi.is_main
+					)
+				) FILTER (WHERE pi.id IS NOT NULL), '[]'
+			) AS images
 		FROM
 		    products p
 		LEFT JOIN
 			product_ratings pr ON p.id = pr.product_id
+		LEFT JOIN
+			product_images pi ON p.id = pi.product_id
 		WHERE
 		    p.id = $1
 		GROUP BY
@@ -93,11 +108,22 @@ func (r *productRepositoryImpl) GetBySlug(ctx context.Context, productSlug strin
 		    p.updated_at,
 		    p.category_id,
 			COALESCE(AVG(pr.rating), 0) AS average_rating,
-	    	COUNT(pr.rating) AS rating_count
+	    	COUNT(pr.rating) AS rating_count,
+	    	COALESCE(
+				json_agg(
+					json_build_object(
+						'id', pi.id::text,
+						'image_url', pi.image_url,
+						'is_main', pi.is_main
+					)
+				) FILTER (WHERE pi.id IS NOT NULL), '[]'
+			) AS images
 		FROM
 		    products p
 		LEFT JOIN
 			product_ratings pr ON p.id = pr.product_id
+		LEFT JOIN
+			product_images pi ON p.id = pi.product_id
 		WHERE
 		    p.slug = $1
 		GROUP BY
@@ -139,10 +165,10 @@ func (r *productRepositoryImpl) Exists(ctx context.Context, productSlug string) 
 	return exists, nil
 }
 
-func collectProductsRows(rows *sql.Rows) (*[]model.Product, error) {
-	var products []model.Product
+func collectProductsRows(rows *sql.Rows) (*[]model.Products, error) {
+	var products []model.Products
 	for rows.Next() {
-		var product model.Product
+		var product model.Products
 		err := rows.Scan(
 			&product.ID,
 			&product.Name,
@@ -156,6 +182,7 @@ func collectProductsRows(rows *sql.Rows) (*[]model.Product, error) {
 			&product.CategoryID,
 			&product.AverageRating,
 			&product.RatingCount,
+			&product.MainImage,
 		)
 		if err != nil {
 			return nil, err
@@ -167,6 +194,7 @@ func collectProductsRows(rows *sql.Rows) (*[]model.Product, error) {
 
 func collectProductRow(row *sql.Row) (*model.Product, error) {
 	var product model.Product
+	var imagesJSON []byte
 	err := row.Scan(
 		&product.ID,
 		&product.Name,
@@ -180,8 +208,12 @@ func collectProductRow(row *sql.Row) (*model.Product, error) {
 		&product.CategoryID,
 		&product.AverageRating,
 		&product.RatingCount,
+		&imagesJSON,
 	)
 	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(imagesJSON, &product.Images); err != nil {
 		return nil, err
 	}
 	return &product, nil

@@ -50,7 +50,7 @@ func (s *serviceImpl) Category() domain.CategoryService {
 }
 
 func (s *serviceImpl) Product() domain.ProductService {
-	return NewProductService(s.productRepository, s.logger)
+	return NewProductService(s.productRepository, s.logger, s.cfg)
 }
 
 func (s *serviceImpl) ProductRating() domain.ProductRatingService {
