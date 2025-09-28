@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+
 	"github.com/arshamroshannejad/squidshop-backend/config"
 	"github.com/redis/go-redis/v9"
 )

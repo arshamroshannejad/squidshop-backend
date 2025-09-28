@@ -1,4 +1,272 @@
 basePath: /api/v1
+definitions:
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryCreateRequest:
+    properties:
+      name:
+        example: Electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+      parent_id:
+        example: 1
+        minimum: 1
+        type: integer
+      slug:
+        example: electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - name
+    - slug
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryUpdateRequest:
+    properties:
+      name:
+        example: Electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+      parent_id:
+        example: 1
+        minimum: 1
+        type: integer
+      slug:
+        example: electronics
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - name
+    - slug
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentCreateRequest:
+    properties:
+      comment:
+        example: nice product
+        minLength: 1
+        type: string
+      parent_id:
+        example: 12
+        type: integer
+    required:
+    - comment
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentUpdateRequest:
+    properties:
+      comment:
+        example: nice product
+        minLength: 1
+        type: string
+    required:
+    - comment
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCreateRequest:
+    properties:
+      category_id:
+        example: 1
+        minimum: 1
+        type: integer
+      description:
+        example: lorem ipsum dolor sit amet, consectetur adipiscing elit
+        minLength: 1
+        type: string
+      name:
+        example: call of duty black ops 4
+        maxLength: 255
+        minLength: 1
+        type: string
+      price:
+        example: 23400.23
+        minimum: 1
+        type: number
+      quantity:
+        example: 10
+        minimum: 1
+        type: integer
+      short_description:
+        example: lorem ipsum dolor sit amet, consectetur adipiscing elit
+        maxLength: 255
+        minLength: 1
+        type: string
+      slug:
+        example: call-of-duty-black-ops-4
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - category_id
+    - description
+    - name
+    - price
+    - quantity
+    - short_description
+    - slug
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest:
+    properties:
+      rate:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        example: 5
+        type: integer
+    required:
+    - rate
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductUpdateRequest:
+    properties:
+      category_id:
+        example: 1
+        minimum: 1
+        type: integer
+      description:
+        example: lorem ipsum dolor sit amet, consectetur adipiscing elit
+        minLength: 1
+        type: string
+      name:
+        example: call of duty black ops 4
+        maxLength: 255
+        minLength: 1
+        type: string
+      price:
+        example: 23400.23
+        minimum: 1
+        type: number
+      quantity:
+        example: 10
+        minimum: 1
+        type: integer
+      short_description:
+        example: lorem ipsum dolor sit amet, consectetur adipiscing elit
+        maxLength: 255
+        minLength: 1
+        type: string
+      slug:
+        example: call-of-duty-black-ops-4
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - category_id
+    - description
+    - name
+    - price
+    - quantity
+    - short_description
+    - slug
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.UserAuthRequest:
+    properties:
+      phone:
+        example: "+989029266635"
+        maxLength: 13
+        minLength: 1
+        type: string
+    required:
+    - phone
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.UserVerifyAuthRequest:
+    properties:
+      code:
+        example: "123456"
+        type: string
+      phone:
+        example: "+989029266635"
+        type: string
+    required:
+    - code
+    - phone
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_model.Category:
+    properties:
+      id:
+        example: "1"
+        type: string
+      name:
+        example: Laptop
+        type: string
+      slug:
+        example: laptop
+        type: string
+      sub_categories:
+        items:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Category'
+        type: array
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_model.Product:
+    properties:
+      average_rating:
+        example: 4.5
+        type: number
+      category_id:
+        example: "1"
+        type: string
+      created_at:
+        example: "2025-09-12T00:12:12.123456789Z"
+        type: string
+      description:
+        example: Call of Duty black ops 4 is a first-person shooter game
+        type: string
+      id:
+        example: "1"
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.ProductImage'
+        type: array
+      name:
+        example: Call of Duty black ops 4
+        type: string
+      price:
+        example: 19.99
+        type: number
+      quantity:
+        example: 10
+        type: integer
+      rating_count:
+        example: 12
+        type: integer
+      short_description:
+        example: Call of Duty black ops 4 is a first-person shooter game
+        type: string
+      slug:
+        example: call-of-duty-black-ops-4
+        type: string
+      updated_at:
+        example: "2025-09-12T00:12:12.123456789Z"
+        type: string
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_model.ProductImage:
+    properties:
+      id:
+        example: "1"
+        type: string
+      image_url:
+        example: https://example.com/image.jpg
+        type: string
+      is_main:
+        example: true
+        type: boolean
+    type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_model.User:
+    properties:
+      created_at:
+        example: "2025-09-12T00:12:12.123456789Z"
+        type: string
+      id:
+        example: "1"
+        type: string
+      is_admin:
+        example: false
+        type: boolean
+      phone:
+        example: "+989029266635"
+        type: string
+    type: object
 host: api.squidshop.ir
 info:
   contact:
@@ -12,7 +280,543 @@ info:
   termsOfService: http://swagger.io/terms/
   title: squidshop-backend
   version: 0.1.0
-paths: {}
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: if user exists it will log in else register. it also sends otp
+        code to user phone
+      parameters:
+      - description: phone for register or login
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.UserAuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: auth endpoint (register | login)
+      tags:
+      - Auth
+  /auth/verify:
+    post:
+      consumes:
+      - application/json
+      description: verify otp code and return access token
+      parameters:
+      - description: phone and code for register or login
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.UserVerifyAuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: verify auth endpoint
+      tags:
+      - Auth
+  /category:
+    get:
+      consumes:
+      - application/json
+      description: get all categories in db
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Category'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: get categories endpoint
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: create new category
+      parameters:
+      - description: category data for create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create category endpoint
+      tags:
+      - Category
+  /category/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete category by id
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete category endpoint
+      tags:
+      - Category
+    put:
+      consumes:
+      - application/json
+      description: update category by id
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: category data for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.CategoryUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: update category endpoint
+      tags:
+      - Category
+  /category/exists:
+    get:
+      consumes:
+      - application/json
+      description: check category exists with name and slug. at least one of them
+        must be set
+      parameters:
+      - description: category name
+        in: query
+        name: name
+        type: string
+      - description: category slug
+        in: query
+        name: slug
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: exists category endpoint
+      tags:
+      - Category
+  /product:
+    get:
+      consumes:
+      - application/json
+      description: get all products in db
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Product'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: get all products endpoint
+      tags:
+      - Product
+    post:
+      consumes:
+      - application/json
+      description: create product
+      parameters:
+      - description: product data for create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create product endpoint
+      tags:
+      - Product
+  /product/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete product by id
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete product endpoint
+      tags:
+      - Product
+    put:
+      consumes:
+      - application/json
+      description: update product by id
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product data for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: update product endpoint
+      tags:
+      - Product
+  /product/comment/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete product comment
+      parameters:
+      - description: product comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete product comment endpoint
+      tags:
+      - Product Comment
+    post:
+      consumes:
+      - application/json
+      description: create product comment
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product comment data for create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create product comment endpoint
+      tags:
+      - Product Comment
+    put:
+      consumes:
+      - application/json
+      description: update product comment
+      parameters:
+      - description: product comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product comment data for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: update product comment endpoint
+      tags:
+      - Product Comment
+  /product/exists/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: check if product exists by slug
+      parameters:
+      - description: product slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: exists product endpoint
+      tags:
+      - Product
+  /product/id/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get product by id
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Product'
+        "500":
+          description: Internal Server Error
+      summary: get product by id endpoint
+      tags:
+      - Product
+  /product/image/{id}:
+    post:
+      consumes:
+      - multipart/form-data
+      description: create product image by product id
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product images
+        in: formData
+        name: images
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create product image endpoint
+      tags:
+      - Product Image
+  /product/rating/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete product rating
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete product rating endpoint
+      tags:
+      - Product Rating
+    post:
+      consumes:
+      - application/json
+      description: create or update product rating
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product rating data for create or update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductRatingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create or update product rating endpoint
+      tags:
+      - Product Rating
+  /product/slug/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: get product by slug
+      parameters:
+      - description: product slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.Product'
+        "500":
+          description: Internal Server Error
+      summary: get product by slug endpoint
+      tags:
+      - Product
+  /user/profile:
+    get:
+      consumes:
+      - application/json
+      description: get user profile and info based on jwt token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: user profile data
+          schema:
+            $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_model.User'
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: user profile endpoint
+      tags:
+      - User
 securityDefinitions:
   BearerAuth:
     in: header
