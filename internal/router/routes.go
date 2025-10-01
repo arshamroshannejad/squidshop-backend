@@ -151,6 +151,24 @@ func SetupRoutes(db *sql.DB, redisDB *redis.Client, logger *slog.Logger, cfg *co
 			http.HandlerFunc(handlers.ProductComment().DeleteProductCommentHandler),
 		),
 	)
+	mux.Handle(
+		"POST /api/v1/product/comment/like/{id}",
+		middleware.RequireAuth(cfg)(
+			http.HandlerFunc(handlers.ProductCommentLike().CreateProductCommentLikeHandler),
+		),
+	)
+	mux.Handle(
+		"PUT /api/v1/product/comment/like/{id}",
+		middleware.RequireAuth(cfg)(
+			http.HandlerFunc(handlers.ProductCommentLike().UpdateProductCommentLikeHandler),
+		),
+	)
+	mux.Handle(
+		"DELETE /api/v1/product/comment/like/{id}",
+		middleware.RequireAuth(cfg)(
+			http.HandlerFunc(handlers.ProductCommentLike().DeleteProductCommentLikeHandler),
+		),
+	)
 	mux.Handle("/docs/", swagger.Handler(
 		swagger.URL("doc.json"),
 		swagger.DeepLinking(true),

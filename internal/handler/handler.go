@@ -7,26 +7,28 @@ import (
 )
 
 type handlerImpl struct {
-	authHandler           domain.AuthHandler
-	userHandler           domain.UserHandler
-	categoryHandler       domain.CategoryHandler
-	productHandler        domain.ProductHandler
-	productRatingHandler  domain.ProductRatingHandler
-	productImageHandler   domain.ProductImageHandler
-	productCommentHandler domain.ProductCommentHandler
+	authHandler               domain.AuthHandler
+	userHandler               domain.UserHandler
+	categoryHandler           domain.CategoryHandler
+	productHandler            domain.ProductHandler
+	productRatingHandler      domain.ProductRatingHandler
+	productImageHandler       domain.ProductImageHandler
+	productCommentHandler     domain.ProductCommentHandler
+	productCommentLikeHandler domain.ProductCommentLikeHandler
 }
 
 func NewHandler(services domain.Service) domain.Handler {
 	v := validator.New()
 	_ = helper.RegisterValidations(v)
 	return &handlerImpl{
-		authHandler:           NewAuthHandler(services, v),
-		userHandler:           NewUserHandler(services, v),
-		categoryHandler:       NewCategoryHandler(services, v),
-		productHandler:        NewProductHandler(services, v),
-		productRatingHandler:  NewProductRatingHandler(services, v),
-		productImageHandler:   NewProductImageHandler(services, v),
-		productCommentHandler: NewProductCommentHandler(services, v),
+		authHandler:               NewAuthHandler(services, v),
+		userHandler:               NewUserHandler(services, v),
+		categoryHandler:           NewCategoryHandler(services, v),
+		productHandler:            NewProductHandler(services, v),
+		productRatingHandler:      NewProductRatingHandler(services, v),
+		productImageHandler:       NewProductImageHandler(services, v),
+		productCommentHandler:     NewProductCommentHandler(services, v),
+		productCommentLikeHandler: NewProductCommentLikeHandler(services, v),
 	}
 }
 
@@ -56,4 +58,8 @@ func (h *handlerImpl) ProductImage() domain.ProductImageHandler {
 
 func (h *handlerImpl) ProductComment() domain.ProductCommentHandler {
 	return h.productCommentHandler
+}
+
+func (h *handlerImpl) ProductCommentLike() domain.ProductCommentLikeHandler {
+	return h.productCommentLikeHandler
 }
