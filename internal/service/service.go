@@ -10,28 +10,30 @@ import (
 )
 
 type serviceImpl struct {
-	userRepository           domain.UserRepository
-	categoryRepository       domain.CategoryRepository
-	productRepository        domain.ProductRepository
-	productRatingRepository  domain.ProductRatingRepository
-	productImageRepository   domain.ProductImageRepository
-	productCommentRepository domain.ProductCommentRepository
-	redisDB                  *redis.Client
-	logger                   *slog.Logger
-	cfg                      *config.Config
+	userRepository               domain.UserRepository
+	categoryRepository           domain.CategoryRepository
+	productRepository            domain.ProductRepository
+	productRatingRepository      domain.ProductRatingRepository
+	productImageRepository       domain.ProductImageRepository
+	productCommentRepository     domain.ProductCommentRepository
+	productCommentLikeRepository domain.ProductCommentLikeRepository
+	redisDB                      *redis.Client
+	logger                       *slog.Logger
+	cfg                          *config.Config
 }
 
 func NewService(repositories domain.Repository, redisDB *redis.Client, logger *slog.Logger, cfg *config.Config) domain.Service {
 	return &serviceImpl{
-		userRepository:           repositories.User(),
-		categoryRepository:       repositories.Category(),
-		productRepository:        repositories.Product(),
-		productRatingRepository:  repositories.ProductRating(),
-		productImageRepository:   repositories.ProductImage(),
-		productCommentRepository: repositories.ProductComment(),
-		redisDB:                  redisDB,
-		logger:                   logger,
-		cfg:                      cfg,
+		userRepository:               repositories.User(),
+		categoryRepository:           repositories.Category(),
+		productRepository:            repositories.Product(),
+		productRatingRepository:      repositories.ProductRating(),
+		productImageRepository:       repositories.ProductImage(),
+		productCommentRepository:     repositories.ProductComment(),
+		productCommentLikeRepository: repositories.ProductCommentLike(),
+		redisDB:                      redisDB,
+		logger:                       logger,
+		cfg:                          cfg,
 	}
 }
 
@@ -65,6 +67,10 @@ func (s *serviceImpl) ProductImage() domain.ProductImageService {
 
 func (s *serviceImpl) ProductComment() domain.ProductCommentService {
 	return NewProductCommentService(s.productCommentRepository, s.logger)
+}
+
+func (s *serviceImpl) ProductCommentLike() domain.ProductCommentLikeService {
+	return NewProductCommentLikeService(s.productCommentLikeRepository, s.logger)
 }
 
 func (s *serviceImpl) S3() domain.S3Service {

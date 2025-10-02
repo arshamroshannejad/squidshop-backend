@@ -40,6 +40,17 @@ definitions:
     - name
     - slug
     type: object
+  github_com_arshamroshannejad_squidshop-backend_internal_entity.PostCommentLikeCreateUpdate:
+    properties:
+      vote:
+        enum:
+        - 1
+        - -1
+        example: 1
+        type: integer
+    required:
+    - vote
+    type: object
   github_com_arshamroshannejad_squidshop-backend_internal_entity.ProductCommentCreateRequest:
     properties:
       comment:
@@ -644,6 +655,89 @@ paths:
       summary: update product comment endpoint
       tags:
       - Product Comment
+  /product/comment/like/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete product comment like
+      parameters:
+      - description: comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: delete product comment like endpoint
+      tags:
+      - Product Comment Like
+    post:
+      consumes:
+      - application/json
+      description: create product comment like
+      parameters:
+      - description: comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product comment like data for create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.PostCommentLikeCreateUpdate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: create product comment like endpoint
+      tags:
+      - Product Comment Like
+    put:
+      consumes:
+      - application/json
+      description: update product comment like
+      parameters:
+      - description: comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: product comment like data for update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arshamroshannejad_squidshop-backend_internal_entity.PostCommentLikeCreateUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - Bearer: []
+      summary: update product comment like endpoint
+      tags:
+      - Product Comment Like
   /product/exists/{slug}:
     get:
       consumes:

@@ -9,5 +9,6 @@ type Service interface {
 	ProductRating() ProductRatingService
 	ProductImage() ProductImageService
 	ProductComment() ProductCommentService
+	ProductCommentLike() ProductCommentLikeService
 	S3() S3Service
 }

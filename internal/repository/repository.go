@@ -7,22 +7,24 @@ import (
 )
 
 type repositoryImpl struct {
-	userRepository           domain.UserRepository
-	categoryRepository       domain.CategoryRepository
-	productRepository        domain.ProductRepository
-	productRatingRepository  domain.ProductRatingRepository
-	productImageRepository   domain.ProductImageRepository
-	productCommentRepository domain.ProductCommentRepository
+	userRepository               domain.UserRepository
+	categoryRepository           domain.CategoryRepository
+	productRepository            domain.ProductRepository
+	productRatingRepository      domain.ProductRatingRepository
+	productImageRepository       domain.ProductImageRepository
+	productCommentRepository     domain.ProductCommentRepository
+	productCommentLikeRepository domain.ProductCommentLikeRepository
 }
 
 func NewRepository(db *sql.DB) domain.Repository {
 	return &repositoryImpl{
-		userRepository:           NewUserRepository(db),
-		categoryRepository:       NewCategoryRepository(db),
-		productRepository:        NewProductRepository(db),
-		productRatingRepository:  NewProductRatingRepository(db),
-		productImageRepository:   NewProductImageRepository(db),
-		productCommentRepository: NewProductCommentRepository(db),
+		userRepository:               NewUserRepository(db),
+		categoryRepository:           NewCategoryRepository(db),
+		productRepository:            NewProductRepository(db),
+		productRatingRepository:      NewProductRatingRepository(db),
+		productImageRepository:       NewProductImageRepository(db),
+		productCommentRepository:     NewProductCommentRepository(db),
+		productCommentLikeRepository: NewProductCommentLikeRepository(db),
 	}
 }
 
@@ -48,4 +50,8 @@ func (r *repositoryImpl) ProductImage() domain.ProductImageRepository {
 
 func (r *repositoryImpl) ProductComment() domain.ProductCommentRepository {
 	return r.productCommentRepository
+}
+
+func (r *repositoryImpl) ProductCommentLike() domain.ProductCommentLikeRepository {
+	return r.productCommentLikeRepository
 }
